@@ -8,3 +8,9 @@ x = -2
 while x < 10 :
     print(x)
     x = x +1
+
+offset=8
+while offset != 0:
+        print("correcting...")
+        offset = offset - 1
+        print(offset)
