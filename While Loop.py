@@ -5,6 +5,6 @@ while error > 1 :
 
 
 x = -2
-while x < 0 :
+while x < 10 :
     print(x)
     x = x +1
