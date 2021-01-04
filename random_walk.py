@@ -19,3 +19,10 @@ for x in range(100) :
     random_walk.append(step)
 
 print(random_walk)
+import matplotlib.pyplot as plt
+
+plt.plot(random_walk)
+plt.ylabel('Step Im On')
+plt.xlabel('Throws')
+plt.title('Empire Estate')
+plt.show()
