@@ -18,3 +18,7 @@ IN             18          India         False
 RU            200         Russia          True
 MOR            70        Morocco          True
 EG             45          Egypt          True
+
+
+europe = {'spain':'madrid', 'france':'paris', 'germany':'berlin',
+          'norway':'oslo', 'italy':'rome', 'poland':'warsaw', 'austria':'vienna' }
