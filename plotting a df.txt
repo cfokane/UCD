@@ -1,0 +1,36 @@
+df.plot(kind='scatter',x='Wkdayz',y='TC',color='red')
+plt.show()
+
+
+
+pivoted = pandas.pivot_table(data, values='score', columns='template', index='date')
+# Now there will be an index column for date and value columns for 0,1,2,3,4
+pivoted.plot()
+
+data = pd.read_csv('transformed_data.csv')
+Time = data['Wkdayz']
+Cases = data['TC']
+plt.plot_date(Time, Cases, linestyle='solid')
+plt.xlabel('Week')
+plt.ylabel('Total COVID-19 Cases in 1000s')
+plt.title('Total COVID-19 Cases by Country H1 2020')
+plt.grid(True)
+plt.show()
+
+
+
+
+x = df['DATE']
+y = df['TC']
+plt.plot(df)
+plt.show()
+
+https://queirozf.com/entries/pandas-dataframe-plot-examples-with-matplotlib-pyplot
+df.groupby(['TC','CODE']).size().unstack().plot(kind='bar',stacked=True)
+plt.show()
+
+
+import matplotlib.pyplot as plt
+# a scatter plot comparing num_children and num_pets
+df.groupby(['TC','CODE']).size().unstack().plot(kind='bar',stacked=True)
+plt.show()
