@@ -11,6 +11,7 @@ df['Week_Num'] = df['DATE'].dt.strftime('%U')
 df['day'] = df['DATE'].dt.strftime('%A')
 df['dayz'] = df['DATE'].dt.strftime('%j')
 df['Dates'] = df['DATE'].dt.strftime('%Y%m%d')
+df['Wednesdays']=df['day'] =='Wednesday'
 # concatenate columns for Keys from Country Code Week and Day numbers
 #df['Wkdayz'] = df['Week_Num'] + df['dayz']
 #df['Con_cat'] = df['CODE'] + df['Wkdayz']
@@ -39,3 +40,15 @@ print(df.head(10))
 print(df['day'])
 
 print(df)
+
+
+# Drop duplicate store/department combinations
+#CODE_Dupes = df.drop_duplicates(subset=["CODE", "COUNTRY"])
+#print(CODE_Dupes)
+
+# Subset the rows where Wednesday is True and drop duplicate dates
+Wednesday_only_Data = df[df["Wednesdays"]].drop_duplicates(subset="Wkdayz2")
+print(Wednesday_only_Data)
+
+# Print date col of holiday_dates
+#print(holiday_dates["date"])
