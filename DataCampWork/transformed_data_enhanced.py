@@ -12,13 +12,10 @@ df['day'] = df['DATE'].dt.strftime('%A')
 df['dayz'] = df['DATE'].dt.strftime('%j')
 df['Dates'] = df['DATE'].dt.strftime('%Y%m%d')
 # concatenate columns for Keys from Country Code Week and Day numbers
-df['Wkdayz'] = df['Week_Num'] + df['dayz']
-df['Con_cat'] = df['CODE'] + df['Wkdayz']
-df['Cases per M Pop'] = df['TC'] / df['POP']
-for val in df:
-    print(val)
-print(df)
-print(df.head(10))
+#df['Wkdayz'] = df['Week_Num'] + df['dayz']
+#df['Con_cat'] = df['CODE'] + df['Wkdayz']
+#df['Cases per M Pop'] = df['TC'] / df['POP']
+
 
 #for lab, row in df.iterrows() :
 #   print(lab)
@@ -32,3 +29,13 @@ print(df.head(10))
 #    df.loc[lab, 'COUNTRYS'] = row['index_col=0'].upper()
 #    df.loc[lab,'key_'] = df['CODE'] + df['Wkdayz']
 #    print(df)
+# Alternative concatenation method to create unique code by country
+df['Wkdayz'] = df.Week_Num.str.cat(df.dayz)
+df['Wkdayz2'] = df.CODE.str.cat(df.Wkdayz)
+for val in df:
+    print(val)
+print(df)
+print(df.head(10))
+print(df['day'])
+
+print(df)
