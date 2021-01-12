@@ -1,5 +1,7 @@
 import pandas as pd
 df = pd.read_csv('stringency.csv', index_col=0)
+print(df)
+
 for val in df :
     print(val)
 print(df.head(3))

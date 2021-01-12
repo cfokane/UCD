@@ -50,5 +50,6 @@ print(df)
 Wednesday_only_Data = df[df["Wednesdays"]].drop_duplicates(subset="Wkdayz2")
 print(Wednesday_only_Data)
 
-# Print date col of holiday_dates
-#print(holiday_dates["date"])
+# Print date col of Wednesday_only_Data
+#print(Wednesday_only_Data["Wkdayz2"])
+
