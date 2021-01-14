@@ -1,16 +1,19 @@
 import pandas as pd
-CSI = pd.read_csv('covid-stringency-index.csv')
-E_U = pd.read_csv('states.csv')
-COVID_DATA = pd.read_csv('transformed_data.csv')
-CSI['CODE&DATE']=CSI['Code']+CSI['Date']
-COVID_DATA['CODE&DATE']=COVID_DATA['CODE']+COVID_DATA['DATE']
-CSI['DATE'] = pd.to_datetime(CSI['Date'], format='%Y/%m/%d')
-print(CSI.columns)
-#print(COVID_DATA.columns)
-print(CSI)
-#print(S_E.columns)
-#print(E_U.columns)
-# print(S_E.head(5))
+EU = pd.read_csv('states.csv')
+CD = pd.read_csv('transformed_data.csv')
+
+CD['KEYCODE&DATE']=CD['CODE']+CD['DATE']
+
+#CSI['DATE'] = pd.to_datetime(CSI['Date'], format='%Y/%m/%d')
+print(EU.columns)
+print(EU.head)
+print(CD.columns)
+print(CD.head)
+print(EU['European Union']=='Member')
+print(EU[EU['European Union']=='DATE'])
+print(CD['DATE'])
+print(CD['KEYCODE&DATE'])
+
 # print(S_E.info())
 # print(S_E.describe())
 # print(S_E.shape)
@@ -21,9 +24,11 @@ print(CSI)
 #print(EU.head(5))
 #print(EU.columns)
 
-#EU2=(S_E.merge(E_U, left_on='Entity', right_on='Country', how='outer'))
-#print(EU2.head(10))
-#print(EU2.columns)
+CD2=(CD.merge(EU, left_on='COUNTRY', right_on='Country', how='outer'))
+print(CD2.head)
+print(CD2.columns)
+print(CD2.isna().sum())
+
 #COVID_EU2=(EU2.merge(COVID_DATA, left_on='Code', right_on='CODE', how='outer'))
 #COVID_EU2['Cases per Head of Pop']=COVID_EU2['TC']/COVID_EU2['Population']
 
