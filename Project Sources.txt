@@ -9,3 +9,9 @@ view-source:https://www.kaggle.com/shashwatwork/impact-of-covid19-pandemic-on-th
 view-source:https://www.kaggle.com/shashwatwork/impact-of-covid19-pandemic-on-the-global-economy?select=transformed_data.csv
 
 view-source:https://www.kaggle.com/jcyzag/covid19-lockdown-dates-by-country?select=countryLockdowndatesJHUMatch.csv
+
+
+10.17632/b2wvnbnpj9.1#file-eb4f91bf-1c17-4d8c-a35a-17b11faa2f0e
+
+
+https://storage.googleapis.com/kagglesdsdata/datasets/783162/1346384/List_of_European_Union_member_states_by_population.csv?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20210112%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20210112T180708Z&X-Goog-Expires=259199&X-Goog-SignedHeaders=host&X-Goog-Signature=0d44e032d4cf1ff39ffb5d0734a21751916a5c796affb50bac738fc9c8a6ca51ac281794dda20adcf31c0bfb222f78e6040d2d87836b9305f64e2aa514469fcc517133759dc7ad6dbe0b31c0baf73e1b9f4fca76e7112b7b03652ed7a77506c670d1460c9f4c4a670a335478843e520a41cae92a31ca85f4c1b97a60cf2208ab4a44d187c32c1ca85d6b9c13356edc3d095cb539db3ad203abe5c8e49f093003659230e6ec43a21b9f363fa1795a0410b91667d6436d60f2bad97308838800e78325ce5973d30b8c72c26426590ee158dd46039c1b25a772d17947a28d05cfad60ddce0ad0fd137073c32371c3856f9bc8f7e65db1cc66942725feb31c970277

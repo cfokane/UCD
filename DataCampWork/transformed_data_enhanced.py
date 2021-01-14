@@ -47,9 +47,10 @@ print(df)
 #print(CODE_Dupes)
 
 # Subset the rows where Wednesday is True and drop duplicate dates
-Wednesday_only_Data = df[df["Wednesdays"]].drop_duplicates(subset="Wkdayz2")
-print(Wednesday_only_Data)
+#Wednesday_only_Data = df[df["Wednesdays"]].drop_duplicates(subset="Wkdayz2")
+#print(Wednesday_only_Data)
 
 # Print date col of Wednesday_only_Data
 #print(Wednesday_only_Data["Wkdayz2"])
+
 
