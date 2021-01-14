@@ -32,10 +32,10 @@ CD['dayz'] = CD['DATE'].dt.strftime('%j')
 CD['Dates'] = CD['DATE'].dt.strftime('%Y%m%d')
 CD['Wednesdays']=CD['day'] =='Wednesday'
 #CSI['DATE'] = pd.to_datetime(CSI['Date'], format='%Y/%m/%d')
-print(EU.columns)
-print(EU.head)
-print(CD.columns)
-print(CD.head)
+#print(EU.columns)
+#print(EU.head)
+#print(CD.columns)
+#print(CD.head)
 
 #EU['EU_Membership']=(EU['European Union']=='Member')
 BRICS=['Brazil', 'Russia', 'India', 'China', 'South Africa']
