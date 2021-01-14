@@ -1,8 +1,36 @@
 import pandas as pd
 EU = pd.read_csv('states.csv')
 CD = pd.read_csv('transformed_data.csv')
+CD1 = pd.read_csv('raw_data.csv')
 CD['KEYCODE&DATE']=CD['CODE']+CD['DATE']
+Countries = pd.read_csv('countries_of_the_world.csv')
 
+print(CD1.columns)
+print(CD1.head)
+
+
+import pandas as pd
+from pandas import Series, DataFrame
+from pandas.io.parsers import TextFileReader
+
+#CD1['DATE'] = pd.to_datetime(CD1['date'], format='%Y/%m/%d')
+# Create Keys
+#CD1['Week_Num'] = CD1['date'].dt.strftime('%U')
+#CD1['day'] = CD1['date'].dt.strftime('%A')
+#CD1['dayz'] = CD1['date'].dt.strftime('%j')
+#CD1['Dates'] = CD1['date'].dt.strftime('%Y%m%d')
+#CD1['Wednesdays']=CD1['day'] =='Wednesday'
+#print(CD1.columns)
+#print(CD1.head)
+
+
+CD['DATE'] = pd.to_datetime(CD['DATE'], format='%Y/%m/%d')
+# Create Keys
+CD['Week_Num'] = CD['DATE'].dt.strftime('%U')
+CD['day'] = CD['DATE'].dt.strftime('%A')
+CD['dayz'] = CD['DATE'].dt.strftime('%j')
+CD['Dates'] = CD['DATE'].dt.strftime('%Y%m%d')
+CD['Wednesdays']=CD['day'] =='Wednesday'
 #CSI['DATE'] = pd.to_datetime(CSI['Date'], format='%Y/%m/%d')
 print(EU.columns)
 print(EU.head)
@@ -34,6 +62,8 @@ print(EUCD2.head)
 print(EUCD2.columns)
 print(EUCD2.isna().sum())
 
+EUCD2.to_csv('EUCD2.csv')
+
 #COVID_EU2=(EU2.merge(COVID_DATA, left_on='Code', right_on='CODE', how='outer'))
 #COVID_EU2['Cases per Head of Pop']=COVID_EU2['TC']/COVID_EU2['Population']
 
@@ -41,7 +71,14 @@ print(EUCD2.isna().sum())
 #print(COVID_EU2.columns)
 #print(COVID_EU2.shape)
 #print(COVID_EU2.isna().sum())
-#COVID_EU2.to_csv('with_Cases_per_Head_of_Pop.csv')
+
 #import matplotlib.pyplot as plt
 #COVID_EU2.plot(x='STI',y='Date', kind='line')
 #plt.show()
+
+
+
+
+print(EUCD2.head)
+print(EUCD2.columns)
+print(EUCD2.isna().sum())
