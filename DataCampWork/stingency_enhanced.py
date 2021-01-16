@@ -77,9 +77,9 @@ RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
 RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
 RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday'
 # add columns with comparable measures
-RDCD['/100_Pop'] = RDCD['population'] / 100
+RDCD['Cases/Area'] = RDCD['total_cases'] / RDCD['Area (km²)']
 RDCD['Cases/Pop'] = RDCD['total_cases'] / RDCD['population']
-
+RDCD['Deaths/Cases'] = RDCD['total_deaths'] / RDCD['total_cases']
 # park/remove unneeded rows
 del RDCD['Unnamed: 9']
 del RDCD['Unnamed: 10']
@@ -112,7 +112,7 @@ del RDCD['CODE']
 del RDCD['KEYCODE&DATE']
 del RDCD['DATE_RD']
 
-# Create Economic Blocks/Groups
+# Create groups of Economic Blocks using Dict method
 econ_blocks = {
     'Country': ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia',
                 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania',
@@ -129,19 +129,27 @@ RDCD = (RDCD.merge(Econ_BLocks, left_on='location', right_on='Country', how='out
 print(RDCD.columns)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
-#Replace Missing Values
+
+#Replace Missing Values by filling 'na's with 'No_Affiliation' identifier
 RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('No_Affiliation')
+
+# Use Wednesday data as weekly reporting day
 RDCD1=RDCD.query('day == "Wednesday"')
+
+# define 2020 period of analysis
 RDCD2=RDCD1.query('Week_Num <= "39"')
-#bond_perc.query('metric == "close"')
 
+del RDCD['Country_y']
 
-
-RDCD2.to_csv('RDCD2.csv')
+RDCD2=RDCD2.sort_values(['iso_code', 'Econ_Block', 'Week_Num'])
+#forward fill for missing entries
 
 print(RDCD2)
 
-# define period of analysis
+RDCD2.to_csv('RDCD2.csv')
+
+
+
 #print(type('Week_Num'))
 # RDCD.groupby('Econ_Block')['Cases/Pop'].mean())
 # print(RDCD)
