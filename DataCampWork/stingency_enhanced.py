@@ -3,6 +3,7 @@ import pandas as pd
 EU = pd.read_csv('states.csv')
 CD = pd.read_csv('transformed_data.csv')
 RD = pd.read_csv('raw_data.csv')
+#Creat Key
 CD['KEYCODE&DATE'] = CD['CODE'] + CD['DATE']
 RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
 RD['KEYCODE&DATE'] = RD['iso_code'] + RD['date']
@@ -138,7 +139,7 @@ RDCD1=RDCD.query('day == "Wednesday"')
 
 # define 2020 period of analysis
 RDCD2=RDCD1.query('Week_Num <= "39"')
-
+RDCD2=RDCD1.query('Econ_Block == "EU"')
 del RDCD['Country_y']
 
 
@@ -146,8 +147,8 @@ del RDCD['Country_y']
 
 #RDCD2EB = RDCD2.groupby('Econ_Block')['total_cases', 'total_deaths', 'Deaths/Cases'].sum()
 #print(RDCD2EB)
-print(RDCD2.pivot_table(values='Deaths/Cases', index='Econ_Block', columns='Week_Num', fill_value=0, margins=False))
-
+RDCD3=(RDCD2.pivot_table(values='Deaths/Cases', index='Econ_Block', columns='Week_Num', fill_value=0, margins=False))
+print(RDCD3)
 RDCD2.to_csv('RDCD2.csv')
 
 # Import the matplotlib.pyplot submodule and name it plt
