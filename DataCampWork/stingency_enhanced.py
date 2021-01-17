@@ -141,14 +141,25 @@ RDCD2=RDCD1.query('Week_Num <= "39"')
 
 del RDCD['Country_y']
 
-RDCD2=RDCD2.sort_values(['iso_code', 'Econ_Block', 'Week_Num'])
+
 #forward fill for missing entries
 
-print(RDCD2)
+#RDCD2EB = RDCD2.groupby('Econ_Block')['total_cases', 'total_deaths', 'Deaths/Cases'].sum()
+#print(RDCD2EB)
+print(RDCD2.pivot_table(values='Deaths/Cases', index='Econ_Block', columns='Week_Num', fill_value=0, margins=False))
 
 RDCD2.to_csv('RDCD2.csv')
 
+# Import the matplotlib.pyplot submodule and name it plt
+import matplotlib.pyplot as plt
 
+# Create a Figure and an Axes with plt.subplots
+#fig, ax = plt.subplots()
+
+# Plot MLY-PRCP-NORMAL from seattle_weather against MONTH
+#RDCD2=RDCD2.sort_values(['iso_code', 'Econ_Block', 'Week_Num'])
+#ax.plot(RDCD2["date"], RDCD2["total_cases"])
+#plt.show()
 
 #print(type('Week_Num'))
 # RDCD.groupby('Econ_Block')['Cases/Pop'].mean())
@@ -162,8 +173,8 @@ import numpy as np
 
 #Filter df to Wks1-25 2020
 
-filter_criteria=((RDCD['Week_Num'] <='25') & (RDCD['Econ_Block'] !='No_Affiliation') & (RDCD['day'] =='Wednesday')  )
-print(RDCD.loc[filter_criteria, ['Cases/Pop', 'population']].mean())
+#filter_criteria=((RDCD['Week_Num'] <='25') & (RDCD['Econ_Block'] !='No_Affiliation') & (RDCD['day'] =='Wednesday')  )
+#print(RDCD.loc[filter_criteria, ['Cases/Pop', 'population']].mean())
 
 #print(Econ)
 

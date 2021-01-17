@@ -1,0 +1,205 @@
+# Import the matplotlib.pyplot submodule and name it plt
+import matplotlib.pyplot as plt
+
+# Create a Figure and an Axes with plt.subplots
+fig, ax = plt.subplots()
+
+# Plot MLY-PRCP-NORMAL from seattle_weather against MONTH
+ax.plot(seattle_weather["MONTH"], seattle_weather["MLY-PRCP-NORMAL"])
+
+# Plot MLY-PRCP-NORMAL from austin_weather against MONTH
+ax.plot(austin_weather["MONTH"], austin_weather["MLY-PRCP-NORMAL"])
+
+# Call the show function
+plt.show()
+
+
+# Plot Seattle data, setting data appearance
+ax.plot(seattle_weather["MONTH"], seattle_weather["MLY-PRCP-NORMAL"],
+        color='b', marker='o', linestyle='--')
+
+# Plot Austin data, setting data appearance
+ax.plot(austin_weather["MONTH"], austin_weather["MLY-PRCP-NORMAL"],
+        color='r', marker='v', linestyle='--')
+
+# Call show to display the resulting plot
+plt.show()
+
+# Customize the x-axis label
+ax.set_xlabel('Time (months)')
+
+# Customize the y-axis label
+ax.set_ylabel("Precipitation (inches)")
+
+# Add the title
+ax.set_title("Weather patterns in Austin and Seattle")
+
+# Display the figure
+plt.show()
+
+#to create a figure with 6 axis
+fig, ax = plt.subplots(3, 2)
+
+
+# Plot Seattle precipitation in the top axes
+ax[0].plot(seattle_weather["MONTH"], seattle_weather["MLY-PRCP-NORMAL"], color='b')
+ax[0].plot(seattle_weather["MONTH"], seattle_weather["MLY-PRCP-25PCTL"], color='b', linestyle='--')
+ax[0].plot(seattle_weather["MONTH"], seattle_weather["MLY-PRCP-75PCTL"], color='b', linestyle='--')
+
+# Plot Austin precipitation in the bottom axes
+ax[1].plot(austin_weather["MONTH"], austin_weather["MLY-PRCP-NORMAL"], color='r')
+ax[1].plot(austin_weather["MONTH"], austin_weather["MLY-PRCP-25PCTL"], color='r', linestyle='--')
+ax[1].plot(austin_weather["MONTH"], austin_weather["MLY-PRCP-75PCTL"], color='r', linestyle='--')
+
+plt.show()
+
+
+CLIMATE CHANGE EXAMPLE
+# Import pandas
+import pandas as pd
+
+# Read the data from file using read_csv
+climate_change = pd.read_csv('climate_change.csv', parse_dates=["date"], index_col="date")
+
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+
+# Add the time-series for "relative_temp" to the plot
+ax.plot(climate_change.index, climate_change['relative_temp'])
+
+# Set the x-axis label
+ax.set_xlabel('Time')
+
+# Set the y-axis label 
+ax.set_ylabel('Relative temperature (Celsius)')
+
+# Show the figure
+plt.show()
+
+import matplotlib.pyplot as plt
+
+# Use plt.subplots to create fig and ax
+fig, ax = plt.subplots()
+
+# Create variable seventies with data from "1970-01-01" to "1979-12-31"
+seventies = climate_change["1970-01-01":"1979-12-31"]
+
+# Add the time-series for "co2" data from seventies to the plot
+ax.plot(seventies.index, seventies["co2"])
+
+# Show the figure
+plt.show()
+
+Another Example - resulting in defining a function
+STEP1
+import matplotlib.pyplot as plt
+
+# Initalize a Figure and Axes
+fig, ax = plt.subplots()
+
+# Plot the CO2 variable in blue
+ax.plot(climate_change.index, climate_change["co2"], color='blue')
+
+# Create a twin Axes that shares the x-axis
+ax2 = ax.twinx()
+
+# Plot the relative temperature in red
+ax2.plot(climate_change.index, climate_change["relative_temp"], color='red')
+
+plt.show()
+STEP2
+# Define a function called plot_timeseries
+def plot_timeseries(axes, x, y, color, xlabel, ylabel):
+
+  # Plot the inputs x,y in the provided color
+  axes.plot(x, y, color=color)
+
+  # Set the x-axis label
+  axes.set_xlabel(xlabel)
+
+  # Set the y-axis label
+  axes.set_ylabel(ylabel, color=color)
+
+  # Set the colors tick params for y-axis
+  axes.tick_params('y', colors=color)
+
+
+STEP3
+fig, ax = plt.subplots()
+
+# Plot the CO2 levels time-series in blue
+plot_timeseries(ax, climate_change.index, climate_change["co2"], 'blue', "Time (years)", "CO2 levels")
+
+# Create a twin Axes object that shares the x-axis
+ax2 = ax.twinx()
+
+# Plot the relative temperature data in red
+plot_timeseries(ax2, climate_change.index, climate_change['relative_temp'], 'red', "Time (years)", "Relative temperature (Celsius)")
+
+plt.show()
+
+STEP 4 - Adding Annotation
+
+fig, ax = plt.subplots()
+
+# Plot the relative temperature data
+ax.plot(climate_change.index, climate_change['relative_temp'])
+
+# Annotate the date at which temperatures exceeded 1 degree
+ax.annotate(">1 degree", xy=(pd.Timestamp('2015-10-06'), 1))
+
+plt.show()
+
+STEP 5
+fig, ax = plt.subplots()
+
+# Plot the CO2 levels time-series in blue
+plot_timeseries(ax, climate_change.index, climate_change["co2"], 'blue', "Time (years)", "CO2 levels")
+
+# Create an Axes object that shares the x-axis
+ax2 = ax.twinx()
+
+# Plot the relative temperature data in red
+plot_timeseries(ax2, climate_change.index, climate_change['relative_temp'], 'red', "Time (years)", "Relative temp (Celsius)")
+
+# Annotate the point with relative temperature >1 degree
+ax2.annotate(">1 degree", xy=(pd.Timestamp('2015-10-06'), 1), xytext=(pd.Timestamp('2008-10-06'), -0.2), arrowprops={'arrowstyle':'->', 'color':'gray'})
+
+plt.show()
+
+
+BAR CHART
+fig, ax = plt.subplots()
+
+# Plot a bar-chart of gold medals as a function of country
+ax.bar(medals.index, medals['Gold'])
+
+# Set the x-axis tick labels to the country names
+ax.set_xticklabels(medals.index, rotation=90)
+
+# Set the y-axis label
+ax.set_ylabel('Number of medals')
+
+plt.show()
+
+
+STACKED BAR
+# Add bars for "Gold" with the label "Gold"
+ax.bar(medals.index, medals['Gold'], label ='Gold')
+
+# Stack bars for "Silver" on top with label "Silver"
+ax.bar(medals.index, medals['Silver'], bottom=medals['Gold'], label='Silver')
+
+# Stack bars for "Bronze" on top of that with label "Bronze"
+ax.bar(medals.index, medals['Bronze'], bottom=medals['Gold']+medals['Silver'], label='Bronze')
+
+# Set the x-axis tick labels to the country names
+ax.set_xticklabels(medals.index, rotation=90)
+# Set the y-axis label
+ax.set_ylabel('Number of medals')
+
+# Display the legend
+ax.legend()
+
+plt.show()
+
