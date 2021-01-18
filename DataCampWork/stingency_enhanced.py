@@ -1,50 +1,34 @@
-import pandas as pd
-
-EU = pd.read_csv('states.csv')
-CD = pd.read_csv('transformed_data.csv')
-RD = pd.read_csv('raw_data.csv')
-#Creat Key
-CD['KEYCODE&DATE'] = CD['CODE'] + CD['DATE']
-RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
-RD['KEYCODE&DATE'] = RD['iso_code'] + RD['date']
-Countries = pd.read_csv('countries_of_the_world.csv')
-
-# print(RD['DATE'])
-# Create Key in RD
-print(RD['KEYCODE&DATE'])
-print(RD.columns)
-print(RD.head)
-
+import numpy as np
 import pandas as pd
 from pandas import Series, DataFrame
 from pandas.io.parsers import TextFileReader
 
+#Read CSV's into Project
+CD = pd.read_csv('transformed_data.csv')
+RD = pd.read_csv('raw_data.csv')
+EU = pd.read_csv('states.csv')
+Countries = pd.read_csv('countries_of_the_world.csv')
+# Create Key to merge data
+CD.sort_values('DATE')
+CD['KEYCODE&DATE'] = CD['CODE'] + CD['DATE']
+RD.sort_values('date')
+RD['KEYCODE&DATE'] = RD['iso_code'] + RD['date']
+print(RD['KEYCODE&DATE'])
+print(CD['KEYCODE&DATE'])
+#print(RD.columns)
+#print(RD.head)
+RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
 CD['DATE'] = pd.to_datetime(CD['DATE'], format='%Y/%m/%d')
-# Create Key Fields
-# CD['Week_Num'] = CD['DATE'].dt.strftime('%U')
-# CD['day'] = CD['DATE'].dt.strftime('%A')
-# CD['dayz'] = CD['DATE'].dt.strftime('%j')
-# CD['Dates'] = CD['DATE'].dt.strftime('%Y%m%d')
-# CD['Wednesdays']=CD['day'] =='Wednesday'
 
-# print(CD.columns)
-# print(CD.head)
-
-# EU['EU_Membership']=(EU['European Union']=='Member')
-BRICS = ['Brazil', 'Russia', 'India', 'China', 'South Africa']
-condition = CD["COUNTRY"].isin(BRICS)
-print(CD[condition])
-
-print('EU_Membership')
-print(EU[EU['European Union'] == 'EU_Membership'])
+print(CD.columns)
+print(RD.columns)
+print(Countries)
+print(Countries.columns)
 print(EU.columns)
 print(EU.head)
 
-# print(S_E.info())
-# print(S_E.describe())
-# print(S_E.shape)
-# print(S_E.index)
-# for val in S_E :
+print(EU.index)
+#    for val in EU :
 #    print(val)
 # EU=(pd.concat([S_E, E_U], sort=True))
 # print(EU.head(5))
@@ -57,30 +41,30 @@ print(CD.columns)
 print(CD.isna().sum())
 CD.to_csv('CD.csv')
 
-# COVID_EU2=(EU2.merge(COVID_DATA, left_on='Code', right_on='CODE', how='outer'))
-# COVID_EU2['Cases per Head of Pop']=COVID_EU2['TC']/COVID_EU2['Population']
-
-# print(COVID_EU2.head(10))
-# print(COVID_EU2.columns)
-# print(COVID_EU2.shape)
-# print(COVID_EU2.isna().sum())
 
 # import matplotlib.pyplot as plt
 # COVID_EU2.plot(x='STI',y='Date', kind='line')
 # plt.show()
 
+
 RDCD = (RD.merge(CD, on='KEYCODE&DATE', how='outer', suffixes=('_RD', '_CD')))
 RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
+
 # Create Key Fields
 RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U')
 RDCD['day'] = RDCD['DATE'].dt.strftime('%A')
 RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
 RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
 RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday'
+# Calculate Weekly Change in Cases
+RDCD['Weekly_Cases'] = RDCD.total_cases.diff()
+RDCD['Weekly_Deaths'] = RDCD.total_deaths.diff()
 # add columns with comparable measures
-RDCD['Cases/Area'] = RDCD['total_cases'] / RDCD['Area (km²)']
-RDCD['Cases/Pop'] = RDCD['total_cases'] / RDCD['population']
-RDCD['Deaths/Cases'] = RDCD['total_deaths'] / RDCD['total_cases']
+RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
+RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population']
+RDCD['DeathsxCases'] = RDCD['total_deaths'] / RDCD['total_cases']
+
+
 # park/remove unneeded rows
 del RDCD['Unnamed: 9']
 del RDCD['Unnamed: 10']
@@ -125,21 +109,23 @@ econ_blocks = {
                    'BRICS', 'US', 'Japan']}
 Econ_BLocks = pd.DataFrame(econ_blocks)
 RDCD = (RDCD.merge(Econ_BLocks, left_on='location', right_on='Country', how='outer'))
-
-
-print(RDCD.columns)
-print(RDCD.isna().any())
+# check for missing data
 print(RDCD.isna().sum())
+RDCD.fillna(0)
 
 #Replace Missing Values by filling 'na's with 'No_Affiliation' identifier
 RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('No_Affiliation')
-
+print(RDCD.columns)
+print(RDCD.isna().any())
+print(RDCD.isna().sum())
 # Use Wednesday data as weekly reporting day
 RDCD1=RDCD.query('day == "Wednesday"')
 
 # define 2020 period of analysis
-RDCD2=RDCD1.query('Week_Num <= "39"')
-RDCD2=RDCD1.query('Econ_Block == "EU"')
+print(RDCD1.loc[:'Week_Num'])
+#RDCD2=RDCD1.query('Week_Num <= "39"')
+RDCD2=RDCD1.query('date <= "2020-09-30"')
+
 del RDCD['Country_y']
 
 
@@ -147,10 +133,13 @@ del RDCD['Country_y']
 
 #RDCD2EB = RDCD2.groupby('Econ_Block')['total_cases', 'total_deaths', 'Deaths/Cases'].sum()
 #print(RDCD2EB)
-RDCD3=(RDCD2.pivot_table(values='Deaths/Cases', index='Econ_Block', columns='Week_Num', fill_value=0, margins=False))
-print(RDCD3)
-RDCD2.to_csv('RDCD2.csv')
+RDCD3=(RDCD2.pivot_table(values='CasesxPop', index='Week_Num', columns='Econ_Block', fill_value=0, margins=False))
 
+RDCD.to_csv('RDCD.csv')
+RDCD2.to_csv('RDCD2.csv')
+RDCD3.to_csv('RDCD3.csv')
+
+print(RDCD3)
 # Import the matplotlib.pyplot submodule and name it plt
 import matplotlib.pyplot as plt
 
@@ -198,3 +187,20 @@ import matplotlib.pyplot as plt
 #RDCD['Active Range'] = RDCD['Week_Num']<=25)
 
 #still need to work out how you are going to report the econ blocks mean or pivot
+
+
+#OLD CODE
+# EU['EU_Membership']=(EU['European Union']=='Member')
+#BRICS = ['Brazil', 'Russia', 'India', 'China', 'South Africa']
+#condition = CD["COUNTRY"].isin(BRICS)
+#print(CD[condition])
+
+
+#print(EU[EU['European Union'] == 'EU_Membership'])
+# COVID_EU2=(EU2.merge(COVID_DATA, left_on='Code', right_on='CODE', how='outer'))
+# COVID_EU2['Cases per Head of Pop']=COVID_EU2['TC']/COVID_EU2['Population']
+
+# print(COVID_EU2.head(10))
+# print(COVID_EU2.columns)
+# print(COVID_EU2.shape)
+# print(COVID_EU2.isna().sum())

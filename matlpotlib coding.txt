@@ -195,6 +195,7 @@ ax.bar(medals.index, medals['Bronze'], bottom=medals['Gold']+medals['Silver'], l
 
 # Set the x-axis tick labels to the country names
 ax.set_xticklabels(medals.index, rotation=90)
+
 # Set the y-axis label
 ax.set_ylabel('Number of medals')
 
@@ -203,3 +204,95 @@ ax.legend()
 
 plt.show()
 
+
+HISTOGRAM
+fig, ax = plt.subplots()
+# Plot a histogram of "Weight" for mens_rowing
+ax.hist(mens_rowing['Weight'])
+
+# Compare to histogram of "Weight" for mens_gymnastics
+ax.hist(mens_gymnastics['Weight'])
+
+# Set the x-axis label to "Weight (kg)"
+ax.set_xlabel("Weight (kg)")
+
+# Set the y-axis label to "# of observations"
+ax.set_ylabel("# of observations")
+
+plt.show()
+
+
+STEP HISTOGRAM
+fig, ax = plt.subplots()
+
+# Plot a histogram of "Weight" for mens_rowing
+ax.hist(mens_rowing["Weight"], histtype='step', label="Rowing", bins=5)
+
+# Compare to histogram of "Weight" for mens_gymnastics
+ax.hist(mens_gymnastics["Weight"], histtype='step', label="Gymnastics", bins=5)
+
+ax.set_xlabel("Weight (kg)")
+ax.set_ylabel("# of observations")
+
+# Add the legend and show the Figure
+ax.legend()
+plt.show()
+
+SCATTER PLOT
+fig, ax = plt.subplots()
+
+# Add data: "co2" on x-axis, "relative_temp" on y-axis
+ax.scatter(climate_change["co2"], climate_change["relative_temp"])
+
+# Set the x-axis label to "CO2 (ppm)"
+ax.set_xlabel("CO2 (ppm)")
+
+# Set the y-axis label to "Relative temperature (C)"
+ax.set_ylabel("Relative temperature (C)")
+
+plt.show()
+
+SCATTERPLOT Encoding the index (Time)
+fig, ax = plt.subplots()
+
+# Add data: "co2", "relative_temp" as x-y, index as color
+ax.scatter(climate_change["co2"], climate_change["relative_temp"], c=climate_change.index)
+
+# Set the x-axis label to "CO2 (ppm)"
+ax.set_xlabel("CO2 (ppm)")
+
+# Set the y-axis label to "Relative temperature (C)"
+ax.set_ylabel("Relative temperature (C)")
+
+plt.show()
+
+SIMPLE LINE GRAPH WITH GGPLOT SETTINGS
+# Use the "ggplot" style and create new Figure/Axes
+plt.style.use('ggplot')
+fig, ax=plt.subplots()
+ax.plot(seattle_weather["MONTH"], seattle_weather["MLY-TAVG-NORMAL"])
+plt.show()
+
+
+SIMPLE LINE GRAPH WITH Solarize_Light2 SETTINGS
+# Use the "Solarize_Light2" style and create new Figure/Axes
+plt.style.use('Solarize_Light2')
+fig, ax=plt.subplots()
+ax.plot(austin_weather["MONTH"], austin_weather["MLY-TAVG-NORMAL"])
+plt.show()
+
+AUTOMATE YOUR VISUALISATION EXAMPLE
+fig, ax = plt.subplots()
+
+# Loop over the different sports branches
+for sport in sports:
+  # Extract the rows only for this sport
+  sport_df = summer_2016_medals[summer_2016_medals["Sport"] == sport]
+  # Add a bar for the "Weight" mean with std y error bar
+  ax.bar(sport, sport_df["Weight"].mean(), yerr=sport_df["Weight"].std())
+
+ax.set_ylabel("Weight")
+ax.set_xticklabels(sports, rotation=90)
+
+# Save the figure to file
+fig.savefig("sports_weights.png")
