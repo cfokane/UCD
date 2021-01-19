@@ -8,6 +8,8 @@ CD = pd.read_csv('transformed_data.csv')
 RD = pd.read_csv('raw_data.csv')
 EU = pd.read_csv('states.csv')
 Countries = pd.read_csv('countries_of_the_world.csv')
+
+
 # Create Key to merge data
 CD.sort_values('DATE')
 CD['KEYCODE&DATE'] = CD['CODE'] + CD['DATE']
@@ -15,6 +17,9 @@ RD.sort_values('date')
 RD['KEYCODE&DATE'] = RD['iso_code'] + RD['date']
 print(RD['KEYCODE&DATE'])
 print(CD['KEYCODE&DATE'])
+
+#Sort rows before creating new data series
+
 #print(RD.columns)
 #print(RD.head)
 RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
@@ -22,15 +27,14 @@ CD['DATE'] = pd.to_datetime(CD['DATE'], format='%Y/%m/%d')
 
 print(CD.columns)
 print(RD.columns)
-print(Countries)
-print(Countries.columns)
 print(EU.columns)
-print(EU.head)
+print(Countries.columns)
 
 print(EU.index)
 #    for val in EU :
 #    print(val)
-# EU=(pd.concat([S_E, E_U], sort=True))
+#EU2=(pd.concat([RD, Countries, sort=True))
+#print(EU2)
 # print(EU.head(5))
 # print(EU.columns)
 
@@ -42,11 +46,6 @@ print(CD.isna().sum())
 CD.to_csv('CD.csv')
 
 
-# import matplotlib.pyplot as plt
-# COVID_EU2.plot(x='STI',y='Date', kind='line')
-# plt.show()
-
-
 RDCD = (RD.merge(CD, on='KEYCODE&DATE', how='outer', suffixes=('_RD', '_CD')))
 RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
 
@@ -56,9 +55,7 @@ RDCD['day'] = RDCD['DATE'].dt.strftime('%A')
 RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
 RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
 RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday'
-# Calculate Weekly Change in Cases
-RDCD['Weekly_Cases'] = RDCD.total_cases.diff()
-RDCD['Weekly_Deaths'] = RDCD.total_deaths.diff()
+
 # add columns with comparable measures
 RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
 RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population']
@@ -118,28 +115,46 @@ RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('No_Affiliation')
 print(RDCD.columns)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
-# Use Wednesday data as weekly reporting day
+# Create a Weekly Dataset using Wednesday data as weekly reporting day
 RDCD1=RDCD.query('day == "Wednesday"')
-
-# define 2020 period of analysis
-print(RDCD1.loc[:'Week_Num'])
+#RDCD1.loc[:, 'Date')
+#RDCD2=RDCD1.query('DATE <= 2020-06-30')
+#RDCD2=RDCD1.query('DATE > 2020-01-01')
+#define 2020 period of analysis
+#print(RDCD1.loc[:'Week_Num'])
 #RDCD2=RDCD1.query('Week_Num <= "39"')
-RDCD2=RDCD1.query('date <= "2020-09-30"')
-
-del RDCD['Country_y']
 
 
-#forward fill for missing entries
+RDCD.to_csv('RDCD.csv')
+
+
+
+RDCD1 = pd.read_csv('RDCD.csv')
+del RDCD1['Country_y']
+# Calculate Weekly Change in Cases
+RDCD1['Weekly_Cases']=(RDCD1.groupby('iso_code')['total_cases'].diff())
+RDCD1['Weekly_Deaths']=(RDCD1.groupby('iso_code')['total_deaths'].diff())
+#Change Govt'stringency_index' to a more comparable index (1-10) called Stringency_Indexed
+RDCD1['Stringency_Indexed']=(RDCD1['stringency_index'] / 10).round()
+
+RDCD1.to_csv('RDCD1.csv')
+print(RDCD1.groupby('iso_code')['Week_Num'].count())
+
+
+
+RDCD1.to_csv('RDCD1.csv')
+
+RDCD2 = pd.read_csv('RDCD1.csv')
+
+RDCD4=(RDCD1.pivot_table(values='CasesxPop', index='Week_Num', columns='Econ_Block', fill_value=0, margins=True))
+RDCD4.to_csv('RDCD4.csv')
+#print(RDCD4)
+
+#forward fill for missing entries or 0's where value is missing
 
 #RDCD2EB = RDCD2.groupby('Econ_Block')['total_cases', 'total_deaths', 'Deaths/Cases'].sum()
 #print(RDCD2EB)
-RDCD3=(RDCD2.pivot_table(values='CasesxPop', index='Week_Num', columns='Econ_Block', fill_value=0, margins=False))
 
-RDCD.to_csv('RDCD.csv')
-RDCD2.to_csv('RDCD2.csv')
-RDCD3.to_csv('RDCD3.csv')
-
-print(RDCD3)
 # Import the matplotlib.pyplot submodule and name it plt
 import matplotlib.pyplot as plt
 
