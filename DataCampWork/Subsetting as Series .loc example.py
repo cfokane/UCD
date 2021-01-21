@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-RDSB= pd.read_csv('RDCD1.csv', index_col=0)
+RDSB= pd.read_csv('RDCD1.csv', index_col=0) #check does usecols=range(1,10) work???
 print(RDSB.columns)
 print(RDSB)
 print(RDSB.index)
@@ -20,6 +20,10 @@ Key_Columns_Only.to_csv('Key_Columns_Only.csv')
 
 #Read CSV and index on Date_RD
 KCO = pd.read_csv('Key_Columns_Only.csv', index_col=2)
+KCO2=KCO[['Month', 'total_cases','total_deaths']]
+print(KCO2)
+
+
 
 #filtering the new df
 #by Euro_Block
