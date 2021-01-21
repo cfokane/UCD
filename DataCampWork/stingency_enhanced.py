@@ -28,15 +28,10 @@ CD['DATE'] = pd.to_datetime(CD['DATE'], format='%Y/%m/%d')
 print(CD.columns)
 print(RD.columns)
 print(EU.columns)
-print(Countries.columns)
+
 
 print(EU.index)
-#    for val in EU :
-#    print(val)
-#EU2=(pd.concat([RD, Countries, sort=True))
-#print(EU2)
-# print(EU.head(5))
-# print(EU.columns)
+
 
 # Merge EU data into CD Data
 CD = (CD.merge(EU, left_on='COUNTRY', right_on='Country', how='inner'))
@@ -54,7 +49,8 @@ RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U')
 RDCD['day'] = RDCD['DATE'].dt.strftime('%A')
 RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
 RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
-RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday'
+RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #do we need a month measure here for simplicity
+
 
 # add columns with comparable measures
 RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
@@ -94,7 +90,7 @@ del RDCD['CODE']
 del RDCD['KEYCODE&DATE']
 del RDCD['DATE_RD']
 
-# Create groups of Economic Blocks using Dict method
+# Create groups of Economic Blocks from Dictionary
 econ_blocks = {
     'Country': ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia',
                 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania',
@@ -108,35 +104,35 @@ Econ_BLocks = pd.DataFrame(econ_blocks)
 RDCD = (RDCD.merge(Econ_BLocks, left_on='location', right_on='Country', how='outer'))
 # check for missing data
 print(RDCD.isna().sum())
-RDCD.fillna(0)
+RDCD.fillna(0) #do we need this?
 
 #Replace Missing Values by filling 'na's with 'No_Affiliation' identifier
 RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('No_Affiliation')
 print(RDCD.columns)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
+
 # Create a Weekly Dataset using Wednesday data as weekly reporting day
 RDCD1=RDCD.query('day == "Wednesday"')
-#RDCD1.loc[:, 'Date')
-#RDCD2=RDCD1.query('DATE <= 2020-06-30')
-#RDCD2=RDCD1.query('DATE > 2020-01-01')
-#define 2020 period of analysis
-#print(RDCD1.loc[:'Week_Num'])
-#RDCD2=RDCD1.query('Week_Num <= "39"')
 
 
+#output this to csv
 RDCD.to_csv('RDCD.csv')
 
 
-
+# import this as csv
 RDCD1 = pd.read_csv('RDCD.csv')
 del RDCD1['Country_y']
-# Calculate Weekly Change in Cases
+del RDCD1['Unnamed: 0']
+
+# Calculate Weekly Change in Cases & Deaths from cumulative data
 RDCD1['Weekly_Cases']=(RDCD1.groupby('iso_code')['total_cases'].diff())
 RDCD1['Weekly_Deaths']=(RDCD1.groupby('iso_code')['total_deaths'].diff())
-#Change Govt'stringency_index' to a more comparable index (1-10) called Stringency_Indexed
-RDCD1['Stringency_Indexed']=(RDCD1['stringency_index'] / 10).round()
 
+#Change Govt'stringency_index' measure to a comparable index (1-5) called Stringency_Indexed
+RDCD1['Stringency_Indexed']=(RDCD1['stringency_index'] / 5).round()
+
+#output this to csv
 RDCD1.to_csv('RDCD1.csv')
 print(RDCD1.groupby('iso_code')['Week_Num'].count())
 
@@ -219,3 +215,11 @@ import matplotlib.pyplot as plt
 # print(COVID_EU2.columns)
 # print(COVID_EU2.shape)
 # print(COVID_EU2.isna().sum())
+
+
+#RDCD1.loc[:, 'Date')
+#RDCD2=RDCD1.query('DATE <= 2020-06-30')
+#RDCD2=RDCD1.query('DATE > 2020-01-01')
+#define 2020 period of analysis
+#print(RDCD1.loc[:'Week_Num'])
+#RDCD2=RDCD1.query('Week_Num <= "39"')

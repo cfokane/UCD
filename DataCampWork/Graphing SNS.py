@@ -9,7 +9,7 @@ import seaborn as sns
 sns.scatterplot(x='stringency_index', y='Weekly_Cases', data=EU, hue='Weekly_Deaths')
 
 sns.relplot(x="Week_Num", y="Weekly_Cases",
-                data=EU,
+                data= EU,
                 kind='line', row='Econ_Block', ci='sd')
 
 # Show plot
