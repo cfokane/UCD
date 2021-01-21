@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+
 from pandas import Series, DataFrame
 from pandas.io.parsers import TextFileReader
 
@@ -42,15 +44,17 @@ CD.to_csv('CD.csv')
 
 
 RDCD = (RD.merge(CD, on='KEYCODE&DATE', how='outer', suffixes=('_RD', '_CD')))
-RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
 
+RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
+print(RDCD['date'])
 # Create Key Fields
 RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U')
+RDCD['Month'] = RDCD['DATE'].dt.strftime('%b')
 RDCD['day'] = RDCD['DATE'].dt.strftime('%A')
 RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
 RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
 RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #do we need a month measure here for simplicity
-
+print(RDCD)
 
 # add columns with comparable measures
 RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
@@ -88,7 +92,7 @@ del RDCD['DATE_CD']
 del RDCD['COUNTRY']
 del RDCD['CODE']
 del RDCD['KEYCODE&DATE']
-del RDCD['DATE_RD']
+#del RDCD['DATE_RD']
 
 # Create groups of Economic Blocks from Dictionary
 econ_blocks = {
@@ -112,7 +116,7 @@ print(RDCD.columns)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
 
-# Create a Weekly Dataset using Wednesday data as weekly reporting day
+# Create a Weekly Dataset to using Wednesday as the filter to give a weekly reporting day
 RDCD1=RDCD.query('day == "Wednesday"')
 
 
@@ -138,13 +142,26 @@ print(RDCD1.groupby('iso_code')['Week_Num'].count())
 
 
 
-RDCD1.to_csv('RDCD1.csv')
+RDCD1.to_csv('RDCD1.csv') #being used by subsetting .loc to create Key_columns_Only.csv
 
 RDCD2 = pd.read_csv('RDCD1.csv')
 
-RDCD4=(RDCD1.pivot_table(values='CasesxPop', index='Week_Num', columns='Econ_Block', fill_value=0, margins=True))
+
+
+#create a pivot table
+RDCD4=(RDCD1.pivot_table(values='Weekly_Cases', index='Week_Num', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True))
 RDCD4.to_csv('RDCD4.csv')
-#print(RDCD4)
+print(RDCD4)
+
+RDCD5=(RDCD1.pivot_table(values='Weekly_Deaths', index='Week_Num', columns='Econ_Block', aggfunc='sum', fill_value=0, margins=True))
+RDCD5.to_csv('RDCD5.csv')
+print(RDCD5)
+
+
+
+#RDCD5=(RDCD1.pivot(index='Week_Num', columns='Econ_Block',values='Weekly_Cases'))
+#RDCD5.to_csv('RDCD5.csv')
+#print(RDCD5)
 
 #forward fill for missing entries or 0's where value is missing
 
