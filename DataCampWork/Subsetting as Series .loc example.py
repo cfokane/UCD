@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime
 
-RDSB= pd.read_csv('RDCD.csv', index_col=0) #check does usecols=range(1,10) work???
+RDSB= pd.read_csv('RDCD.csv', index_col=11) #check does usecols=range(1,10) work???
+
 print(RDSB.columns)
 print(RDSB)
-print(RDSB.index)
 print(RDSB.dtypes)
 #filter DATE to define Date Range
 mask = (RDSB['DATE_CD'] > '2020-01-01') & (RDSB['DATE_CD'] < '2020-09-30')
@@ -56,7 +56,7 @@ KCO2=KCO[['DATE', 'Month', 'total_cases','total_deaths']]
 #filtered_df=KCO2.loc['2020-01-30':'2020-02-05']#not working
 
 #KCO2.loc[['2020-01-30': '2020-02-30'],[]] #notworking
-KCO3 = KCO2.loc[(KCO2.DATE >= '2020-01-30') & (KCO2.DATE <= '2020-02-30')] #not working
+KCO3 = KCO2.loc[(KCO2.DATE_CD >= '2020-01-30') & (KCO2.DATE_CD <= '2020-02-30')] #not working
 #KCO3 = KCO2.loc[(KCO2.Dates >= 01-01-2020) | (KCO2.Dates <= 06-03-2020)] #not working
 #KCO3= KCO2(np.logical_and(KCO2.Dates >= '2020-01-30', KCO2.Dates <= '2020-02-30'))#not working
 print(KCO3)

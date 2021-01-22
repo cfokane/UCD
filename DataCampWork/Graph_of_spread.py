@@ -6,12 +6,6 @@ import seaborn as sns
 from matplotlib import rcParams
 
 data = pd.read_csv('RDCD8.csv', index_col=0)
-#KCO3 = KCO2.loc[(KCO2.DATE >= '2020-01-30') & (KCO2.DATE <= '2020-02-30')] #not working
-print(data)
-print(data.head())
-print(data.columns)
-#data1=(data1.sort_index(level=['Month'], ascending=[True])) #...would this sort months ascending?
-
 from matplotlib.pyplot import rcParams
 rcParams['figure.figsize']=10,6 # to change size of graph
 plt.plot(data.Grand_Total, color='m', linestyle='-')
