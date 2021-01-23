@@ -1,0 +1,47 @@
+fam = [1.73, 1.68, 1.71, 1.89]
+for height in fam
+	print(height)
+
+for index, height in enumerate(fam)
+	print('index' + str(index) + ": " + str(height))
+
+
+
+for loop to add new column
+import pandas as pd
+
+brics - pd.read_csv('brics.csv', index_col=0)
+
+for lab, row in brics.iterrows() :
+
+#- creating series on every iteration
+
+brics.loc[lab, 'name_length'] = len(row['country'])
+
+
+OR
+brics - pd.read_csv('brics.csv', index_col=0)
+brics['name_length'] = brics['country'].appy(len)
+
+
+RDCD1=RDCD.query("DATE_RD >= '2020-06-01' and DATE_RD <='2020-09-05'")
+
+PLOT ON PROMARY & SECONDARY AXIS
+
+fig, ax =plt.subplots()
+ax.plot(data.index, date['Grand_Total'], color='blue')
+ax.set_xlabel('Time')
+ax.set_ylabel('Countries with Cases', colour='blue)
+ax.tick_params('y', colors='blue')
+ax2=ax.twinx()
+ax2.plot(data.index, data['something'], color='red')
+ax2.set_ylabel('something'', colour='red')
+ax2.tick_params('y', colors='red')
+plt.show()
+
+
+
+ax2= ax.twinx()
+ax2.plot(data.index, data['somefield'],color='red')
+ax2.annotate('X Countries record cases of CoVid19', xy=[pd.TimeStamp('2020-03-01), 1), xytext=(pd.Timestamp('2020-03-15'), 0.2), arrowprops={'arrowstle':'->', 'colour':'grey'})
+
