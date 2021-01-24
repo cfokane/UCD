@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 import seaborn as sns
-from matplotlib import rcParams
+
 
 data = pd.read_csv('RDCD8.csv', index_col=0)
 from matplotlib.pyplot import rcParams
