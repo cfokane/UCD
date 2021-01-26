@@ -55,8 +55,8 @@ RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d') #dont think this is doing any
 RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #boolean set to confirm Wednesday as True
 
 # add columns with comparable measures
-RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
-RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population']
+RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)'].round()
+RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population'].round()
 RDCD['DeathsxCases'] = (RDCD['total_deaths'] / RDCD['total_cases']).round(1)
 RDCD['AreaKM2'] =RDCD['Area (km²)'] #new field
 RDCD['PopKM2'] =RDCD ['population'] / RDCD['Area (km²)'] #new field
@@ -74,7 +74,7 @@ del RDCD['Unnamed: 13']
 del RDCD['GDP per capita ($, millions)']
 del RDCD['GDP ($, millions)']
 del RDCD['GDP (€, millions)']
-del RDCD['Population Density']
+#del RDCD['Population Density']
 del RDCD['Population']
 del RDCD['Language']
 del RDCD['Currency Code']
@@ -201,13 +201,13 @@ RDCD5a=RDCD5.reindex(new_order, axis=0)
 RDCD5a.to_csv('RDCD5a.csv')
 print(RDCD5a)
 
-RDCD6=(RDCD2.pivot_table(values='Weekly_Cases', index=['Month'], columns=['Econ_Block'], aggfunc='sum', fill_value=0, margins=False))
+RDCD6=(RDCD1.pivot_table(values='Weekly_Cases', index=['Month'], columns=['Econ_Block'], aggfunc='sum', fill_value=0, margins=False))
 new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
 RDCD6a=RDCD6.reindex(new_order, axis=0)
 RDCD6a.to_csv('RDCD6a.csv')
 print(RDCD6a)
 
-RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','Weekly_Deaths'] , index=['Week_Num', 'Econ_Block'], aggfunc='sum', fill_value=0))
+RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','DeathsxCases'] , index=['Week_Num'], aggfunc='sum', fill_value=0))
 RDCD7.to_csv('RDCD7.csv')
 print(RDCD7)
 
@@ -236,13 +236,26 @@ print(RDCD9f)
 
 
 #Bubble Chart, cases per Area on Wk39
-RDCD12c=(RDCD12c.pivot_table(values=['AreaKM2', 'population'], index='CasesxArea', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12c.to_csv('RDCD12c.csv')
-print(RDCD12c)
+RDCD12g=(RDCD12c.pivot_table(values=['AreaKM2'], index='location',  aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12g.to_csv('RDCD12g.csv')
+print(RDCD12g)
+RDCD12h=(RDCD12c.pivot_table(values=['PopKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12h.to_csv('RDCD12h.csv')
+print(RDCD12h)
+RDCD12i=(RDCD12c.pivot_table(values=['CasesxArea'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12i.to_csv('RDCD12i.csv')
+print(RDCD12i)
+RDCD12j=(RDCD12c.pivot_table(values=['population'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12j.to_csv('RDCD12j.csv')
+print(RDCD12j)
 
+RDCD12k=(RDCD12c.pivot_table(values=['Population Density'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12k.to_csv('RDCD12k.csv')
+print(RDCD12k)
 
-
-
+RDCD12l=(RDCD12c.pivot_table(values=['total_cases', 'Population Density', 'CasesxArea', 'CasesxPop', 'AreaKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12l.to_csv('RDCD12l.csv')
+print(RDCD12l)
 
 #print(Stringency_Index_5)
 
