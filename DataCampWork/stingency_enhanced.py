@@ -12,7 +12,7 @@ EU = pd.read_csv('states.csv')
 Countries = pd.read_csv('countries_of_the_world.csv')
 
 
-# Create Key to merge data
+# Create Key to merge data together
 CD.sort_values('DATE')
 CD['KEYCODE&DATE'] = CD['CODE'] + CD['DATE']
 RD.sort_values('date')
@@ -21,18 +21,15 @@ print(RD['KEYCODE&DATE'])
 print(CD['KEYCODE&DATE'])
 
 #Sort rows before creating new data series
-
-#print(RD.columns)
-#print(RD.head)
 RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
 CD['DATE'] = pd.to_datetime(CD['DATE'], format='%Y/%m/%d')
+
+
 
 print(CD.columns)
 print(RD.columns)
 print(EU.columns)
 
-
-print(EU.index)
 
 
 # Merge EU data into CD Data
@@ -40,27 +37,33 @@ CD = (CD.merge(EU, left_on='COUNTRY', right_on='Country', how='inner'))
 print(CD.head)
 print(CD.columns)
 print(CD.isna().sum())
+
 CD.to_csv('CD.csv')
 
-
+# Merge enlarged CD dataset with RD dataset
 RDCD = (RD.merge(CD, on='KEYCODE&DATE', how='outer', suffixes=('_RD', '_CD')))
 
+#Create new fields re Dates
 RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
 print(RDCD['date'])
 # Create Key Fields
-RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U')
-RDCD['Month'] = RDCD['DATE'].dt.strftime('%b')
-RDCD['day'] = RDCD['DATE'].dt.strftime('%A')
-RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j')
-RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d')
-RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #do we need a month measure here for simplicity
-print(RDCD)
+RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U') #number of the week in the year
+RDCD['Month'] = RDCD['DATE'].dt.strftime('%b') #short name of the month
+RDCD['day'] = RDCD['DATE'].dt.strftime('%A') #day of the week
+RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j') #number of the day in the year
+RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d') #dont think this is doing anything useful
+RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #boolean set to confirm Wednesday as True
 
 # add columns with comparable measures
 RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
 RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population']
-RDCD['DeathsxCases'] = RDCD['total_deaths'] / RDCD['total_cases']
-
+RDCD['DeathsxCases'] = (RDCD['total_deaths'] / RDCD['total_cases']).round(1)
+RDCD['AreaKM2'] =RDCD['Area (km²)'] #new field
+RDCD['PopKM2'] =RDCD ['population'] / RDCD['Area (km²)'] #new field
+#RDCD['Cases per AreaKM²'] = (RDCD['total_cases'] / RDCD['Area (km²)']).round(2)
+#Change Govt'stringency_index' measure to a comparable index (0-5) called Stringency_Indexed
+RDCD['Stringency_Indexed']=(RDCD['stringency_index'] / 20).round()
+print(RDCD)
 
 # park/remove unneeded rows
 del RDCD['Unnamed: 9']
@@ -88,76 +91,166 @@ del RDCD['STI']
 del RDCD['TD']
 del RDCD['TC']
 del RDCD['HDI']
-del RDCD['DATE_CD']
 del RDCD['COUNTRY']
 del RDCD['CODE']
 del RDCD['KEYCODE&DATE']
 #del RDCD['DATE_RD']
+#del RDCD['DATE_CD']
 
 # Create groups of Economic Blocks from Dictionary
 econ_blocks = {
     'Country': ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia',
                 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania',
                 'Luxembourg', 'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Spain',
-                'Sweden', 'United Kingdom', 'Brazil', 'Russia', 'India', 'China', 'South Africa', 'United States',
-                'Japan'],
+                'Sweden', 'United Kingdom', 'Brazil', 'Russia', 'India', 'China', 'South Africa', 'United States'],
     'Econ_Block': ['EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU',
                    'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'EU', 'BRICS', 'BRICS', 'BRICS', 'BRICS',
-                   'BRICS', 'US', 'Japan']}
+                   'BRICS', 'US']}
+#convert econ_block to dataframe
 Econ_BLocks = pd.DataFrame(econ_blocks)
+
+# Merge Econ_BLocks dataset to enhance RDCD dataset
 RDCD = (RDCD.merge(Econ_BLocks, left_on='location', right_on='Country', how='outer'))
+
 # check for missing data
+#print(RDCD.isna().any())
 print(RDCD.isna().sum())
-RDCD.fillna(0) #do we need this?
+
 
 #Replace Missing Values by filling 'na's with 'No_Affiliation' identifier
-RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('No_Affiliation')
-print(RDCD.columns)
-print(RDCD.isna().any())
+RDCD.fillna(0)
+RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('All_Others')
+
 print(RDCD.isna().sum())
+print(RDCD)
 
 # Create a Weekly Dataset to using Wednesday as the filter to give a weekly reporting day
-RDCD1=RDCD.query('day == "Wednesday"')
+RDCD=RDCD.query('day == "Wednesday"')
+
+
+print(RDCD)
+print(RDCD.isna().any())
+print(RDCD.isna().sum())
+print(RDCD.dtypes)
 
 
 #output this to csv
 RDCD.to_csv('RDCD.csv')
 
-
 # import this as csv
 RDCD1 = pd.read_csv('RDCD.csv')
+#mask = (RDCD['DATE_CD'] > '2020-01-01') & (RDCD['DATE_CD'] < '2020-09-30')
+#Date_Range=RDCD.loc[mask]
+#print(Date_Range)
+
+
+
 del RDCD1['Country_y']
 del RDCD1['Unnamed: 0']
 
-# Calculate Weekly Change in Cases & Deaths from cumulative data
+
+
+# Calculate Weekly Change in Cases & Deaths from cumulative data within dataset
 RDCD1['Weekly_Cases']=(RDCD1.groupby('iso_code')['total_cases'].diff())
 RDCD1['Weekly_Deaths']=(RDCD1.groupby('iso_code')['total_deaths'].diff())
 
-#Change Govt'stringency_index' measure to a comparable index (1-5) called Stringency_Indexed
-RDCD1['Stringency_Indexed']=(RDCD1['stringency_index'] / 5).round()
+
+
+print(RDCD1.dtypes)
+
+group=(RDCD1.groupby('iso_code')['Week_Num'].count())
+print(group)
+#select final date range to analyse
+RDCD1=RDCD1.query("DATE_RD >= '2020-01-07' and DATE_RD <='2020-09-30'")
 
 #output this to csv
-RDCD1.to_csv('RDCD1.csv')
-print(RDCD1.groupby('iso_code')['Week_Num'].count())
+RDCD1.to_csv('RDCD11.csv') #being used by subsetting .loc to create Key_columns_Only.csv
 
+RDCD2 = pd.read_csv('RDCD11.csv')
 
+#RDCD2['Stringency_Index_5'] = RDCD2.loc[:, ['Stringency_Indexed']==5]
 
-RDCD1.to_csv('RDCD1.csv') #being used by subsetting .loc to create Key_columns_Only.csv
+# Using .loc to create boolean of Stringency at 5 ad store as new column
+RDCD2.loc[:, 'Stringency_Index_5']= RDCD2['Stringency_Indexed']>=4
+print(RDCD2.dtypes)
 
-RDCD2 = pd.read_csv('RDCD1.csv')
+#filter stringency levels >=4 by country
+RDCD2=RDCD2.query('Stringency_Index_5 == True')
+RDCD2.to_csv('RDCD2.csv')
+RDCD3 = pd.read_csv('RDCD2.csv')
 
-
+RDCD12 = pd.read_csv('RDCD.csv')
+RDCD12a=RDCD12.query('Week_Num== 39')
+RDCD12a.to_csv('RDCD12a.csv')
+RDCD12b = pd.read_csv('RDCD12a.csv')
+RDCD12c = RDCD12b.query('Econ_Block == "EU"')
+RDCD12c.to_csv('RDCD12c.csv')
+RDCD12c = pd.read_csv('RDCD12c.csv')
 
 #create a pivot table
-RDCD4=(RDCD1.pivot_table(values='Weekly_Cases', index='Week_Num', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True))
-RDCD4.to_csv('RDCD4.csv')
-print(RDCD4)
+RDCD4=(RDCD1.pivot_table(values='DeathsxCases', index='Month', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True).iloc[:-1,:])
+RDCD4a=RDCD4.fillna(0)
+new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+RDCD4b=RDCD4a.reindex(new_order, axis=0)
+RDCD4b.to_csv('RDCD4b.csv')
+print(RDCD4b)
 
-RDCD5=(RDCD1.pivot_table(values='Weekly_Deaths', index='Week_Num', columns='Econ_Block', aggfunc='sum', fill_value=0, margins=True))
-RDCD5.to_csv('RDCD5.csv')
-print(RDCD5)
+RDCD5=(RDCD1.pivot_table(values='Weekly_Deaths', index='Month', columns='Econ_Block', aggfunc='sum', fill_value=0, margins=False))
+new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+RDCD5a=RDCD5.reindex(new_order, axis=0)
+RDCD5a.to_csv('RDCD5a.csv')
+print(RDCD5a)
+
+RDCD6=(RDCD2.pivot_table(values='Weekly_Cases', index=['Month'], columns=['Econ_Block'], aggfunc='sum', fill_value=0, margins=False))
+new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+RDCD6a=RDCD6.reindex(new_order, axis=0)
+RDCD6a.to_csv('RDCD6a.csv')
+print(RDCD6a)
+
+RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','Weekly_Deaths'] , index=['Week_Num', 'Econ_Block'], aggfunc='sum', fill_value=0))
+RDCD7.to_csv('RDCD7.csv')
+print(RDCD7)
+
+RDCD8=(RDCD1.pivot_table(values='Weekly_Cases', index='Week_Num', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total_Cases').iloc[:-1,:])
+RDCD8.to_csv('RDCD8.csv')
+print(RDCD8)
+RDCD8a=(RDCD1.pivot_table(values='Weekly_Deaths', index='Week_Num', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total_Deaths').iloc[:-1,:])
+RDCD8a.to_csv('RDCD8a.csv')
+print(RDCD8a)
+
+RDCD3 = pd.read_csv('RDCD2.csv')
+RDCD9=(RDCD3.pivot_table(values='Stringency_Indexed', index='Week_Num', columns='location', aggfunc='count', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD9.to_csv('RDCD9.csv')
+print(RDCD9)
+
+#new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+#RDCD9a=RDCD9.reindex(new_order, axis=0)
+RDCD9e=(RDCD3.pivot_table(values='Stringency_Indexed' , columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True))
+RDCD9e.to_csv('RDCD9e.csv')
+print(RDCD9e)
+RDCD9f=(RDCD3.pivot_table(values='Weekly_Deaths', columns='location', index='Week_Num', aggfunc='sum', fill_value=0, margins=True))
+RDCD9e.to_csv('RDCD9f.csv')
+print(RDCD9f)
 
 
+
+
+#Bubble Chart, cases per Area on Wk39
+RDCD12c=(RDCD12c.pivot_table(values=['AreaKM2', 'population'], index='CasesxArea', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12c.to_csv('RDCD12c.csv')
+print(RDCD12c)
+
+
+
+
+
+#print(Stringency_Index_5)
+
+
+
+#import pivot_ui as pivot_ui
+#pivot_ui(RDCD6,outfile_path='pivotRDCD7.html')
+#HTML('pivotRDCD7.html')
 
 #RDCD5=(RDCD1.pivot(index='Week_Num', columns='Econ_Block',values='Weekly_Cases'))
 #RDCD5.to_csv('RDCD5.csv')

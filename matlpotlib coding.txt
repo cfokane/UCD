@@ -252,6 +252,39 @@ ax.set_ylabel("Relative temperature (C)")
 
 plt.show()
 
+DEFINE A FUNCTION TO GENERATE A PLOT
+# Define a function called plot_timeseries
+def plot_timeseries(axes, x, y, color, xlabel, ylabel):
+
+  # Plot the inputs x,y in the provided color
+  axes.plot(x, y, color=color)
+
+  # Set the x-axis label
+  axes.set_xlabel(xlabel)
+
+  # Set the y-axis label
+  axes.set_ylabel(ylabel, color=color)
+
+  # Set the colors tick params for y-axis
+  axes.tick_params('y', colors=color)
+
+SO THEN the code reads as follows:
+fig, ax = plt.subplots()
+
+# Plot the CO2 levels time-series in blue
+plot_timeseries(ax, climate_change.index, climate_change['co2'], "blue", 'Time (years)', 'CO2 levels')
+
+# Create a twin Axes object that shares the x-axis
+ax2 = ax.twinx()
+
+# Plot the relative temperature data in red
+plot_timeseries(ax2, climate_change.index, climate_change['relative_temp'], "red", 'Time (years)', 'Relative temperature (Celsius)')
+
+# ANNOTATING THE PLOT
+ax2.annotate(">1 degree", xy=(pd.Timestamp('2015-10-06'), 1), xytext=(pd.Timestamp('2008-10-06'), -0.2), arrowprops={'arrowstyle':'->', 'color':'gray'})
+
+plt.show()
+
 SCATTERPLOT Encoding the index (Time)
 fig, ax = plt.subplots()
 
@@ -281,6 +314,8 @@ fig, ax=plt.subplots()
 ax.plot(austin_weather["MONTH"], austin_weather["MLY-TAVG-NORMAL"])
 plt.show()
 
+
+
 AUTOMATE YOUR VISUALISATION EXAMPLE
 fig, ax = plt.subplots()
 
@@ -296,3 +331,82 @@ ax.set_xticklabels(sports, rotation=90)
 
 # Save the figure to file
 fig.savefig("sports_weights.png")
+
+
+OLYMPIC MEDALS BAR CHART
+# Add bars for "Gold" with the label "Gold"
+ax.bar(medals.index, medals['Gold'], label ='Gold')
+
+# Stack bars for "Silver" on top with label "Silver"
+ax.bar(medals.index, medals['Silver'], bottom=medals['Gold'], label='Silver')
+
+# Stack bars for "Bronze" on top of that with label "Bronze"
+ax.bar(medals.index, medals['Bronze'], bottom=medals['Gold']+medals['Silver'], label='Bronze')
+
+# Display the legend
+ax.legend()
+
+plt.show()
+
+
+
+HIST Chart with Comparing two - hist step style
+fig, ax = plt.subplots()
+
+# Plot a histogram of "Weight" for mens_rowing
+ax.hist(mens_rowing['Weight'], label='Rowing', histtype='step', bins=5)
+
+# Compare to histogram of "Weight" for mens_gymnastics
+ax.hist(mens_gymnastics['Weight'], label='Gymnastics', histtype='step', bins=5)
+
+ax.set_xlabel("Weight (kg)")
+ax.set_ylabel("# of observations")
+
+# Add the legend and show the Figure
+ax.legend()
+plt.show()
+
+
+# Set the style to white
+sns.set_style('white')
+
+SEABORN - distplot
+sns.set_style('whitegrid')
+sns.distplot(df['fmr_2'])
+plt.show()
+plt.clf()
+
+SEABORN  lmplot
+# Create a regression plot
+sns.lmplot(data=df,
+           x='pop2010',
+           y='fmr_2')
+
+# Remove the spines
+sns.despine()
+
+# Show the plot and clear the figure
+plt.show()
+plt.clf()
+
+
+SEABORN CREATING PALETTES
+sns.palplot(sns.color_palette("Purples", 8))
+sns.palplot(sns.color_palette("husl", 10))
+sns.palplot(sns.color_palette("coolwarm", 6))
+
+SEABORN - Example with Annotations to include mean lines
+# Create a figure and axes. Then plot the data
+fig, ax = plt.subplots()
+sns.distplot(df['fmr_1'], ax=ax)
+
+# Customize the labels and limits
+ax.set(xlabel="1 Bedroom Fair Market Rent", xlim=(100,1500), title="US Rent")
+
+# Add vertical lines for the median and mean
+ax.axvline(x=median, color='m', label='Median', linestyle='--', linewidth=2)
+ax.axvline(x=mean, color='b', label='Mean', linestyle='-', linewidth=2)
+
+# Show the legend and plot the data
+ax.legend()
+plt.show()

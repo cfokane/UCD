@@ -7,8 +7,11 @@ Life_Exp=[43.828, 76.423, 72.301, 42.731, 75.32, 81.235, 79.829, 75.635, 64.062,
 plt.scatter(GDP_Cap, Life_Exp, s=World_Pop)
 plt.xscale('log')
 plt.xticks([1000, 10000, 100000],['1k', '10k', '100k'])
-plt.xlabel('GDP per Capita in US $')
-plt.ylabel('Life Expectancy in Years')
+plt.xlabel('X GDP per Capita in US $')
+plt.ylabel(' Y Life Expectancy in Years')
 plt.title('World Development in 2007')
 plt.grid(True)
+# Additional customizations
+plt.text(1550, 71, 'India')
+plt.text(5700, 80, 'China')
 plt.show()
