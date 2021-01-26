@@ -16,7 +16,7 @@ ax.plot(data.index, data['EU'], label='EU')
 ax.plot(data.index, data['US'], label='US')
 ax.plot(data.index, data['All_Others'], label='All Others')
 #ax.plot(data.index, data['All'], label='All Countries')
-ax.set_xlabel('Time (Months)')
+ax.set_xlabel('2020 (Months)')
 ax.set_ylabel("Deaths as Proportion of Cases")
 ax.set_title("Fig 4b COVID Deaths as Prop of Cases across Key Economic Blocks Q1-Q3 2020")
 
