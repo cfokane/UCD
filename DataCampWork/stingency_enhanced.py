@@ -74,7 +74,6 @@ del RDCD['Unnamed: 13']
 del RDCD['GDP per capita ($, millions)']
 del RDCD['GDP ($, millions)']
 del RDCD['GDP (€, millions)']
-#del RDCD['Population Density']
 del RDCD['Population']
 del RDCD['Language']
 del RDCD['Currency Code']
@@ -203,6 +202,7 @@ print(RDCD5a)
 
 RDCD6=(RDCD1.pivot_table(values='Weekly_Cases', index=['Month'], columns=['Econ_Block'], aggfunc='sum', fill_value=0, margins=False))
 new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+
 RDCD6a=RDCD6.reindex(new_order, axis=0)
 RDCD6a.to_csv('RDCD6a.csv')
 print(RDCD6a)
@@ -211,9 +211,10 @@ RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','DeathsxCases'] , index=['Week_N
 RDCD7.to_csv('RDCD7.csv')
 print(RDCD7)
 
-RDCD8=(RDCD1.pivot_table(values='Weekly_Cases', index='Week_Num', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total_Cases').iloc[:-1,:])
+RDCD8=(RDCD1.pivot_table(values='total_cases', index='Week_Num', columns='location', aggfunc='count', fill_value=0, margins=True, margins_name='Grand_Total_Cases').iloc[:-1,:])
 RDCD8.to_csv('RDCD8.csv')
 print(RDCD8)
+
 RDCD8a=(RDCD1.pivot_table(values='Weekly_Deaths', index='Week_Num', columns='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total_Deaths').iloc[:-1,:])
 RDCD8a.to_csv('RDCD8a.csv')
 print(RDCD8a)
@@ -225,40 +226,51 @@ print(RDCD9)
 
 #new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
 #RDCD9a=RDCD9.reindex(new_order, axis=0)
+
+#create .csv files using different column mixes & iloc to manage Grand Totals/All as appropriate
 RDCD9e=(RDCD3.pivot_table(values='Stringency_Indexed' , columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True))
 RDCD9e.to_csv('RDCD9e.csv')
 print(RDCD9e)
-RDCD9f=(RDCD3.pivot_table(values='Weekly_Deaths', columns='location', index='Week_Num', aggfunc='sum', fill_value=0, margins=True))
-RDCD9e.to_csv('RDCD9f.csv')
+RDCD9f=(RDCD3.pivot_table(values='Weekly_Deaths', columns='location', index='Week_Num', aggfunc='sum', fill_value=0, margins=True).iloc[:-1,:])
+RDCD9f.to_csv('RDCD9f.csv')
 print(RDCD9f)
 
-
-
-
-#Bubble Chart, cases per Area on Wk39
-RDCD12g=(RDCD12c.pivot_table(values=['AreaKM2'], index='location',  aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12g.to_csv('RDCD12g.csv')
-print(RDCD12g)
+#Bubble Chart, cases per Area on YTD Wk39
 RDCD12h=(RDCD12c.pivot_table(values=['PopKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD12h.to_csv('RDCD12h.csv')
 print(RDCD12h)
 RDCD12i=(RDCD12c.pivot_table(values=['CasesxArea'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD12i.to_csv('RDCD12i.csv')
 print(RDCD12i)
+
+
+
+RDCD12g=(RDCD12c.pivot_table(values=['AreaKM2'], index='location',  aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12g.to_csv('RDCD12g.csv')
+print(RDCD12g)
 RDCD12j=(RDCD12c.pivot_table(values=['population'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD12j.to_csv('RDCD12j.csv')
 print(RDCD12j)
-
 RDCD12k=(RDCD12c.pivot_table(values=['Population Density'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD12k.to_csv('RDCD12k.csv')
 print(RDCD12k)
 
-RDCD12l=(RDCD12c.pivot_table(values=['total_cases', 'Population Density', 'CasesxArea', 'CasesxPop', 'AreaKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+RDCD12l=(RDCD12c.pivot_table(values=['Stringency_Indexed', 'total_cases', 'Population Density', 'CasesxArea', 'CasesxPop', 'AreaKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD12l.to_csv('RDCD12l.csv')
 print(RDCD12l)
 
-#print(Stringency_Index_5)
+#Create file to show Stringency vs Cases & Deaths
+RDCDString = pd.read_csv('RDCD9f.csv')
+RDCDStringtote=RDCDString[['Week_Num','All']]
+print(RDCDStringtote)
+RDCDStringtote.to_csv('StringL5WkTot.csv')
+StrL5 = pd.read_csv('StringL5WkTot.csv')
 
+
+# Merge enlarged CD dataset with RD dataset
+#RDCDStWk= (RDCD.merge(StrL5, on='Week_Num', how='inner', suffixes=('_RD', '_CD')))
+
+#print(RDCDStWk)
 
 
 #import pivot_ui as pivot_ui

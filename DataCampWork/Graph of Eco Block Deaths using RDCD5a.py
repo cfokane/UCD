@@ -1,10 +1,9 @@
-import matplotlib.pyplot as plt
-#plt.style.use('seaborn-white')
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
+plt.style.use('seaborn-white')
 
-# Plot GDP/Year
 data1 = pd.read_csv('RDCD5a.csv', index_col=0)
 print(data1)
 fig, ax = plt.subplots()
@@ -17,7 +16,7 @@ ax.plot(data1.index, data1['US'], label='US')
 ax.plot(data1.index, data1['All_Others'], label='All Others')
 ax.set_xlabel('Q1-Q3 2020 (months)')
 ax.set_ylabel("COVID Deaths Reported")
-ax.set_title("COVID Related Deaths by Key Economic Blocks")
+ax.set_title("COVID Related Deaths by select Economic Blocks")
 ax.annotate('115k Deaths', xy=(3, 115000),  xycoords='data',
                 xytext=(-100,-15), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->")
@@ -27,14 +26,15 @@ ax.annotate('57k Deaths', xy=(3, 57000),  xycoords='data',
                 arrowprops=dict(arrowstyle="->")
                 )
 ax.annotate('82k Deaths', xy=(8, 82000),  xycoords='data',
-                xytext=(-0,5), textcoords='offset points',
+                xytext=(-0,-15), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->")
                 )
 ax.annotate('72k Deaths', xy=(8, 72000),  xycoords='data',
                 xytext=(0,-15), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->")
                 )
-ax.legend()
+ax.legend(loc=1)
 
 plt.show()
-fig.savefig('COVID Related Deaths by Key Economic Blocks.png')
+fig.savefig('COVID Related Deaths by select Economic Blocks.png')
+plt.close()

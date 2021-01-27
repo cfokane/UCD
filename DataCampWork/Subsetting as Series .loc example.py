@@ -10,13 +10,13 @@ print(RDSB.columns)
 print(RDSB)
 print(RDSB.dtypes)
 #filter DATE to define Date Range
-mask = (RDSB['DATE_CD'] > '2020-01-01') & (RDSB['DATE_CD'] < '2020-09-30')
+mask = (RDSB['Dates'] > '2020-01-01') & (RDSB['Dates'] < '2020-09-30')
 Date_Range=RDSB.loc[mask]
 print(Date_Range)
 #RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (km²)']
 print(RDSB.dtypes)
 #Select pandas df of key column info using .loc
-Key_Columns_Only = RDSB.loc[:, ['DATE_CD', 'location', 'Dates', 'Month', 'Wednesdays','total_cases', 'total_deaths', 'Week_Num', 'Weekly_Cases', 'Weekly_Deaths', 'Econ_Block','Stringency_Indexed', 'day', 'date']]
+Key_Columns_Only = RDSB.loc[:, [ 'location', 'Dates', 'Month', 'Wednesdays','total_cases', 'total_deaths', 'Week_Num', 'Weekly_Cases', 'Weekly_Deaths', 'Econ_Block','Stringency_Indexed', 'day', 'date']]
 print([Key_Columns_Only])
 #convert to csv
 Key_Columns_Only.to_csv('Key_Columns_Only.csv')
