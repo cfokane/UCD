@@ -7,13 +7,17 @@ from pandas.io.parsers import TextFileReader
 
 #Read CSV's into Project
 CD = pd.read_csv('transformed_data.csv')
+print(CD.columns) #could we remove unneeded coloumns here? Or use loc to create a simplified file after meergin with EU
 RD = pd.read_csv('raw_data.csv')
+print(RD.columns) #could we remove unneeded coloumns here?
 EU = pd.read_csv('states.csv')
+print(EU.columns) #could we remove unneeded coloumns here?
 Countries = pd.read_csv('countries_of_the_world.csv')
 print(Countries.columns)
+# Simplify to needed columns only
 Countries2=Countries.loc[:,['Country', 'Area (sq. mi.)']]
 print(Countries2)
-#convert econ_block to dataframe
+# convert Countries2 to dataframe
 countries2 = pd.DataFrame(Countries2)
 # Merge EU data into CD Data
 RD = (RD.merge(countries2, how='left', left_on='location', right_on='Country'))
@@ -146,7 +150,7 @@ RDCD.to_csv('RDCD.csv')
 # import this as csv
 RDCD1 = pd.read_csv('RDCD.csv')
 
-del RDCD1['Country_y']
+#del RDCD1['Country_y']
 del RDCD1['Unnamed: 0']
 
 
@@ -242,8 +246,10 @@ print(RDCD9e)
 RDCD9f=(RDCD3.pivot_table(values=['Stringency_Indexed'], columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True).iloc[:-1,:])
 RDCD9f.to_csv('RDCD9f.csv')
 print(RDCD9f)
-RDCD12g=(RDCD3.pivot_table(values=['Weekly Cases'], columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True).iloc[:-1,:])
-RDCD9g.to_csv('RDCD9g.csv')
+
+#What graph if any is using this???
+#RDCD12g=(RDCD3.pivot_table(values=['Weekly Cases'], columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True).iloc[:-1,:])
+#RDCD12g.to_csv('RDCD12g.csv') #found this as 9g and fixed it to 12g
 #print(RDCD12g)
 
 
