@@ -10,7 +10,14 @@ CD = pd.read_csv('transformed_data.csv')
 RD = pd.read_csv('raw_data.csv')
 EU = pd.read_csv('states.csv')
 Countries = pd.read_csv('countries_of_the_world.csv')
-
+print(Countries.columns)
+Countries2=Countries.loc[:,['Country', 'Area (sq. mi.)']]
+print(Countries2)
+#convert econ_block to dataframe
+countries2 = pd.DataFrame(Countries2)
+# Merge EU data into CD Data
+RD = (RD.merge(countries2, how='left', left_on='location', right_on='Country'))
+print(RD.head)
 
 # Create Key to merge data together
 CD.sort_values('DATE')
@@ -96,7 +103,7 @@ del RDCD['KEYCODE&DATE']
 #del RDCD['DATE_RD']
 #del RDCD['DATE_CD']
 
-# Create groups of Economic Blocks from Dictionary
+# Create groups of counties/Economic Blocks from Dictionary
 econ_blocks = {
     'Country': ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia',
                 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania',
@@ -138,14 +145,10 @@ RDCD.to_csv('RDCD.csv')
 
 # import this as csv
 RDCD1 = pd.read_csv('RDCD.csv')
-#mask = (RDCD['DATE_CD'] > '2020-01-01') & (RDCD['DATE_CD'] < '2020-09-30')
-#Date_Range=RDCD.loc[mask]
-#print(Date_Range)
-
-
 
 del RDCD1['Country_y']
 del RDCD1['Unnamed: 0']
+
 
 
 
@@ -167,9 +170,9 @@ RDCD1.to_csv('RDCD11.csv') #being used by subsetting .loc to create Key_columns_
 
 RDCD2 = pd.read_csv('RDCD11.csv')
 
-#RDCD2['Stringency_Index_5'] = RDCD2.loc[:, ['Stringency_Indexed']==5]
 
-# Using .loc to create boolean of Stringency at 5 ad store as new column
+
+# Using .loc to create boolean of Stringency at >=4 ad store as new column
 RDCD2.loc[:, 'Stringency_Index_5']= RDCD2['Stringency_Indexed']>=4
 print(RDCD2.dtypes)
 
@@ -178,10 +181,13 @@ RDCD2=RDCD2.query('Stringency_Index_5 == True')
 RDCD2.to_csv('RDCD2.csv')
 RDCD3 = pd.read_csv('RDCD2.csv')
 
+# Create dataset for YTD at Wk39
 RDCD12 = pd.read_csv('RDCD.csv')
 RDCD12a=RDCD12.query('Week_Num== 39')
 RDCD12a.to_csv('RDCD12a.csv')
 RDCD12b = pd.read_csv('RDCD12a.csv')
+
+# Create an EU data sub set
 RDCD12c = RDCD12b.query('Econ_Block == "EU"')
 RDCD12c.to_csv('RDCD12c.csv')
 RDCD12c = pd.read_csv('RDCD12c.csv')
@@ -219,6 +225,8 @@ RDCD8a=(RDCD1.pivot_table(values='Weekly_Deaths', index='Week_Num', columns='loc
 RDCD8a.to_csv('RDCD8a.csv')
 print(RDCD8a)
 
+
+#What is RDCD3?
 RDCD3 = pd.read_csv('RDCD2.csv')
 RDCD9=(RDCD3.pivot_table(values='Stringency_Indexed', index='Week_Num', columns='location', aggfunc='count', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 RDCD9.to_csv('RDCD9.csv')
@@ -231,9 +239,14 @@ print(RDCD9)
 RDCD9e=(RDCD3.pivot_table(values='Stringency_Indexed' , columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True))
 RDCD9e.to_csv('RDCD9e.csv')
 print(RDCD9e)
-RDCD9f=(RDCD3.pivot_table(values='Weekly_Deaths', columns='location', index='Week_Num', aggfunc='sum', fill_value=0, margins=True).iloc[:-1,:])
+RDCD9f=(RDCD3.pivot_table(values=['Stringency_Indexed'], columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True).iloc[:-1,:])
 RDCD9f.to_csv('RDCD9f.csv')
 print(RDCD9f)
+RDCD12g=(RDCD3.pivot_table(values=['Weekly Cases'], columns='location', index='Week_Num', aggfunc='count', fill_value=0, margins=True).iloc[:-1,:])
+RDCD9g.to_csv('RDCD9g.csv')
+#print(RDCD12g)
+
+
 
 #Bubble Chart, cases per Area on YTD Wk39
 RDCD12h=(RDCD12c.pivot_table(values=['PopKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
@@ -243,29 +256,28 @@ RDCD12i=(RDCD12c.pivot_table(values=['CasesxArea'], index='location', aggfunc='s
 RDCD12i.to_csv('RDCD12i.csv')
 print(RDCD12i)
 
+#RDCD12j=(RDCD12c.pivot_table(values=['population'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+#RDCD12j.to_csv('RDCD12j.csv')
+#print(RDCD12j)
+#RDCD12k=(RDCD12c.pivot_table(values=['Population Density'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+#RDCD12k.to_csv('RDCD12k.csv')
+#print(RDCD12k)
 
-
-RDCD12g=(RDCD12c.pivot_table(values=['AreaKM2'], index='location',  aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12g.to_csv('RDCD12g.csv')
-print(RDCD12g)
-RDCD12j=(RDCD12c.pivot_table(values=['population'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12j.to_csv('RDCD12j.csv')
-print(RDCD12j)
-RDCD12k=(RDCD12c.pivot_table(values=['Population Density'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12k.to_csv('RDCD12k.csv')
-print(RDCD12k)
-
-RDCD12l=(RDCD12c.pivot_table(values=['Stringency_Indexed', 'total_cases', 'Population Density', 'CasesxArea', 'CasesxPop', 'AreaKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
-RDCD12l.to_csv('RDCD12l.csv')
-print(RDCD12l)
+#RDCD12l=(RDCD12c.pivot_table(values=['Stringency_Indexed', 'total_cases', 'Population Density', 'CasesxArea', 'CasesxPop', 'AreaKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+#RDCD12l.to_csv('RDCD12l.csv')
+#print(RDCD12l)
 
 #Create file to show Stringency vs Cases & Deaths
-RDCDString = pd.read_csv('RDCD9f.csv')
-RDCDStringtote=RDCDString[['Week_Num','All']]
-print(RDCDStringtote)
-RDCDStringtote.to_csv('StringL5WkTot.csv')
-StrL5 = pd.read_csv('StringL5WkTot.csv')
-
+RDCDStringL5 = pd.read_csv('RDCD9e.csv')
+RDCDDeath = pd.read_csv('RDCD9f.csv')
+print(RDCDStringL5)
+print(RDCDDeath)
+#RDCDStringtote= RDCDStringL5.merge(RDCDDeath, left_on='Week_Num', right_on='Week_Num', how='left', suffixes=('_SL5', '_Death'))
+#RDCDStringtote=RDCDStringtote[['Week_Num','All', 'Weekly_Deaths', 'Weekly_Cases']]
+#print(RDCDStringtote)
+#RDCDStringtote.to_csv('StringL5WkTot.csv')
+#StrL5 = pd.read_csv('StringL5WkTot.csv')
+#print(StrL5)
 
 # Merge enlarged CD dataset with RD dataset
 #RDCDStWk= (RDCD.merge(StrL5, on='Week_Num', how='inner', suffixes=('_RD', '_CD')))

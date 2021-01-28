@@ -4,7 +4,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.pyplot import rcParams
 data = pd.read_csv('RDCD9e.csv')
-print(data)
+print(data.head())
+
+
+
+
 #fig, ax =plt.subplots()
 #ax.plot(data.index, data['Grand_Total'])
 #ax.plot(data.index, data['Weekly_Deaths.161'])
