@@ -107,6 +107,8 @@ del RDCD['KEYCODE&DATE']
 #del RDCD['DATE_RD']
 #del RDCD['DATE_CD']
 
+print(RDCD.columns)
+
 # Create groups of counties/Economic Blocks from Dictionary
 econ_blocks = {
     'Country': ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia',
@@ -212,7 +214,7 @@ print(RDCD5a)
 
 RDCD6=(RDCD1.pivot_table(values='Weekly_Cases', index=['Month'], columns=['Econ_Block'], aggfunc='sum', fill_value=0, margins=False))
 new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-
+# correct order of months
 RDCD6a=RDCD6.reindex(new_order, axis=0)
 RDCD6a.to_csv('RDCD6a.csv')
 print(RDCD6a)
