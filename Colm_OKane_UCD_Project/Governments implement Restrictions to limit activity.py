@@ -4,10 +4,22 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import rcParams
 plt.style.use('seaborn-whitegrid')
 
-data = pd.read_csv('RDCD9.csv', index_col=0)
-print(data)
+RDCD2 = pd.read_csv('RDCDFinal.csv', index_col=0)
+print(RDCD2)
+# Using .loc to create boolean of Stringency at >=4 ad store as new column
+RDCD2.loc[:, 'Stringency_Index_5']= RDCD2['Stringency_Indexed']>=4
+print(RDCD2.dtypes)
+
+#filter stringency levels >=4 by country
+RDCD2=RDCD2.query('Stringency_Index_5 == True')
+RDCD2.to_csv('RDCD2.csv')
+RDCD3 = pd.read_csv('RDCD2.csv')
+
+Str45=(RDCD3.pivot_table(values='Stringency_Indexed', index='Week_Num', columns='location', aggfunc='count', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+
+
 fig, ax =plt.subplots()
-ax.plot(data['Grand_Total'], label='Stringency=5')
+ax.plot(Str45['Grand_Total'], label='Stringency=5')
 ax.set_xlabel("Week Number")
 ax.set_ylabel("Number of Countries at Highest Stringency Level 5")
 ax.set_title('Governments implement Restrictions to limit activity')
@@ -19,7 +31,7 @@ ax.annotate('Wk15 = 150 Countries', xy=(15, 148),  xycoords='data',
                 xytext=(10, -20), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->")
                 )
-ax.legend()
+ax.legend(loc=5)
 plt.show()
-fig.savefig('Stringency_Level5.png')
+fig.savefig('Governments implement Restrictions to limit activity.png')
 plt.close()
