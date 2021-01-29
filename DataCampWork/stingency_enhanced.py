@@ -219,7 +219,7 @@ RDCD6a=RDCD6.reindex(new_order, axis=0)
 RDCD6a.to_csv('RDCD6a.csv')
 print(RDCD6a)
 
-RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','DeathsxCases'] , index=['Week_Num'], aggfunc='sum', fill_value=0))
+RDCD7=(RDCD1.pivot_table(values=['Weekly_Cases','Weekly_Deaths', 'DeathsxCases'] , index=['Week_Num'], aggfunc='sum', fill_value=0))
 RDCD7.to_csv('RDCD7.csv')
 print(RDCD7)
 
