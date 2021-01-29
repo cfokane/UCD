@@ -1,11 +1,13 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 plt.style.use('seaborn-whitegrid')
 
-data = pd.read_csv('RDCD8.csv', index_col=0)
+data = pd.read_csv('RDCDFinal.csv', index_col=0)
+
+data=(data.pivot_table(values='total_cases', index='Week_Num', columns='location', aggfunc='count', fill_value=0, margins=True, margins_name='Grand_Total_Cases').iloc[:-1,:])
+
 print(data)
 from matplotlib.pyplot import rcParams
 fig, ax =plt.subplots()
