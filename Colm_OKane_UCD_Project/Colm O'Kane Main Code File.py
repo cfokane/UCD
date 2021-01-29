@@ -81,11 +81,11 @@ RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #boolean set to confirm Wednesda
 
 
 # add columns with comparable measures
-RDCD['CasesxArea'] = RDCD['total_cases'] / RDCD['Area (sq. mi.)'].round() #change name to mls2
-RDCD['CasesxPop'] = RDCD['total_cases'] / RDCD['population'].round()
+RDCD['CasesxArea'] = (RDCD['total_cases'] / RDCD['Area (sq. mi.)']).round(1) #change name to mls2
+RDCD['CasesxPop'] = (RDCD['total_cases'] / RDCD['population']).round(1)
 RDCD['DeathsxCases'] = (RDCD['total_deaths'] / RDCD['total_cases']).round(1)
 #RDCD['AreaKM2'] =RDCD['Area (km²)'] #new field Change Name to Area(mls².)
-RDCD['PopKM2'] =RDCD ['population'] / RDCD['Area (sq. mi.)'] #new field Change Name to Pop(mls².)
+RDCD['PopKM2'] =(RDCD ['population'] / RDCD['Area (sq. mi.)']).round(1) #new field Change Name to Pop(mls².)
 #RDCD['Cases per AreaKM²'] = (RDCD['total_cases'] / RDCD['Area (sq. mi.)']).round(2) #Change Name
 
 #Change Govt'stringency_index' measure to a comparable index (0-5) called Stringency_Indexed
@@ -133,7 +133,11 @@ RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('All_Others')
 # Create a Weekly Dataset to using Wednesday as the filter to give a weekly reporting day
 RDCD=RDCD.query('day == "Wednesday"')
 
+# Calculate Weekly Change in Cases & Deaths from cumulative data within dataset
+RDCD['Weekly_Cases']=(RDCD.groupby('iso_code')['total_cases'].diff())
+RDCD['Weekly_Deaths']=(RDCD.groupby('iso_code')['total_deaths'].diff())
 
+RDCD=RDCD.query("DATE_RD >= '2020-01-07' and DATE_RD <='2020-09-30'")
 print(RDCD)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
@@ -141,4 +145,20 @@ print(RDCD.dtypes)
 
 
 #output this to csv
-RDCD.to_csv('RDCD.csv')
+RDCD.to_csv('RDCDbase.csv')
+
+# ***** New csv basefile
+RDCD1 = pd.read_csv('RDCDbase.csv')
+#opportunity here to read in certain columns
+#del RDCD1['Country_y']
+#del RDCD1['Unnamed: 0']
+
+#print(RDCD1.dtypes)
+
+#group=(RDCD1.groupby('iso_code')['Week_Num'].count())
+#print(group)
+#select final date range to analyse NOT NEEDED NOW
+#RDCD1=RDCD1.query("DATE_RD >= '2020-01-07' and DATE_RD <='2020-09-30'")
+
+#output this to csv
+RDCD1.to_csv('RDCDFinal.csv') #being used by subsetting .loc to create Key_columns_Only.csv
