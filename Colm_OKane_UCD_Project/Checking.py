@@ -25,7 +25,7 @@ EU = pd.DataFrame(EU)
 
 Countries = pd.read_csv('countries_of_the_world.csv')
 #print(Countries.columns)
-Countries2=Countries.loc[:,['Country', 'Area (sq. mi.)']]
+Countries2=Countries.loc[:,['Country','Region', 'Area (sq. mi.)']]
 #print(Countries2)
 countries2 = pd.DataFrame(Countries2)
 
@@ -56,8 +56,8 @@ print(RD.dtypes)
 print(RD.isna().any())
 
 #CD.fillna(0)
-RD['European Union']=RD['European Union'].fillna('European Free Trade Agreement')
-RD['European Single Market']= RD['European Single Market'].fillna('Member')
+#RD['European Union']=RD['European Union'].fillna('European Free Trade Agreement')
+#RD['European Single Market']= RD['European Single Market'].fillna('Member')
 RD.fillna(0)
 print(RD.isna().sum())
 RD.to_csv('RD2222.csv')

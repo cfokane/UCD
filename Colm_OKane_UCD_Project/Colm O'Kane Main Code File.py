@@ -8,8 +8,8 @@ from pandas import Series, DataFrame
 
 Trans_Data = pd.read_csv('transformed_data.csv')
 #print(Trans_Data.columns)
-CD1 =Trans_Data.loc[:,['CODE', 'COUNTRY', 'DATE', 'HDI']]
-CD1 = pd.DataFrame(CD1)
+#CD1 =Trans_Data.loc[:,['CODE', 'COUNTRY', 'DATE', 'HDI']]
+#CD1 = pd.DataFrame(CD1)
 
 Raw = pd.read_csv('raw_data.csv')
 #print(Raw.columns)
@@ -25,7 +25,7 @@ EU = pd.DataFrame(EU)
 
 Countries = pd.read_csv('countries_of_the_world.csv')
 #print(Countries.columns)
-Countries2=Countries.loc[:,['Country', 'Area (sq. mi.)']]
+Countries2=Countries.loc[:,['Country','Region', 'Area (sq. mi.)']]
 #print(Countries2)
 countries2 = pd.DataFrame(Countries2)
 
@@ -34,65 +34,63 @@ RD = (RD.merge(countries2, how='left', left_on='location', right_on='Country'))
 print(RD)
 
 # Create Key to merge data together
-CD1.sort_values('DATE')
-CD1['KEYCODE&DATE'] = CD1['CODE'] + CD1['DATE']
-RD.sort_values('date')
+#CD1.sort_values('DATE')
+#CD1['KEYCODE&DATE'] = CD1['CODE'] + CD1['DATE']
+#RD.sort_values('date')
 RD['KEYCODE&DATE'] = RD['iso_code'] + RD['date']
 print(RD['KEYCODE&DATE'])
-print(CD1['KEYCODE&DATE'])
+#print(CD1['KEYCODE&DATE'])
 
 #Sort rows before creating new data series
 RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
-CD1['DATE'] = pd.to_datetime(CD1['DATE'], format='%Y/%m/%d')
+#CD1['DATE'] = pd.to_datetime(CD1['DATE'], format='%Y/%m/%d')
 
-print(CD1.columns)
+#print(CD1.columns)
 print(RD.columns)
 print(EU.columns)
 
-# Merge EU data into CD1 Data using 'inner' join and forward fill
-CD = (pd.merge_ordered(CD1, EU, left_on='COUNTRY', right_on='Country', how='outer', fill_method='ffill'))
-print(CD.head)
-print(CD.dtypes)
-print(CD.isna().any())
+# Merge EU data into RD Data using 'outer' join and forward fill
+RD= (pd.merge_ordered(RD, EU, left_on='location', right_on='Country', how='outer', fill_method='ffill'))
+print(RD.head)
+print(RD.dtypes)
+print(RD.isna().any())
 
 #CD.fillna(0)
-CD['European Union']=CD['European Union'].fillna('European Free Trade Agreement')
-CD['European Single Market']= CD['European Single Market'].fillna('Member')
-CD.fillna(0)
-print(CD.isna().sum())
-CD.to_csv('CD.csv')
+#RD['European Union']=RD['European Union'].fillna('European Free Trade Agreement')
+#RD['European Single Market']= RD['European Single Market'].fillna('Member')
+RD.fillna(0)
+print(RD.isna().sum())
+RD.to_csv('RD2222.csv')
 
-# Merge enlarged CD dataset with RD dataset
-RDCD = (RD.merge(CD, on='KEYCODE&DATE', how='outer', suffixes=('_RD', '_CD')))
 
-print(RDCD)
+print(RD)
 
 #Create new fields re Dates
-RDCD['DATE'] = pd.to_datetime(RDCD['date'], format='%Y/%m/%d')
-print(RDCD['date'])
+RD['DATE'] = pd.to_datetime(RD['date'], format='%Y/%m/%d')
+print(RD['date'])
 # Create Key Fields for future reference
-RDCD['Week_Num'] = RDCD['DATE'].dt.strftime('%U') #number of the week in the year
-RDCD['Month'] = RDCD['DATE'].dt.strftime('%b') #short name of the month
-RDCD['day'] = RDCD['DATE'].dt.strftime('%A') #day of the week
-RDCD['dayz'] = RDCD['DATE'].dt.strftime('%j') #number of the day in the year
-RDCD['Dates'] = RDCD['DATE'].dt.strftime('%Y%m%d') #dont think this is doing anything useful
-RDCD['Wednesdays'] = RDCD['day'] == 'Wednesday' #boolean set to confirm Wednesday as True
+RD['Week_Num'] = RD['DATE'].dt.strftime('%U') #number of the week in the year
+RD['Month'] = RD['DATE'].dt.strftime('%b') #short name of the month
+RD['day'] = RD['DATE'].dt.strftime('%A') #day of the week
+RD['dayz'] = RD['DATE'].dt.strftime('%j') #number of the day in the year
+RD['Dates'] = RD['DATE'].dt.strftime('%Y%m%d') #dont think this is doing anything useful
+RD['Wednesdays'] = RD['day'] == 'Wednesday' #boolean set to confirm Wednesday as True
 
 
 
 # add columns with comparable measures
-RDCD['CasesxArea'] = (RDCD['total_cases'] / RDCD['Area (sq. mi.)']).round(1) #change name to mls2
-RDCD['CasesxPop'] = (RDCD['total_cases'] / RDCD['population']).round(1)
-RDCD['DeathsxCases'] = (RDCD['total_deaths'] / RDCD['total_cases']).round(1)
+RD['CasesxArea'] = (RD['total_cases'] / RD['Area (sq. mi.)']).round(1) #change name to mls2
+RD['CasesxPop'] = (RD['total_cases'] / RD['population']).round(1)
+RD['DeathsxCases'] = (RD['total_deaths'] / RD['total_cases']).round(1)
 #RDCD['AreaKM2'] =RDCD['Area (km²)'] #new field Change Name to Area(mls².)
-RDCD['PopKM2'] =(RDCD ['population'] / RDCD['Area (sq. mi.)']).round(1) #new field Change Name to Pop(mls².)
+RD['PopKM2'] =(RD['population'] / RD['Area (sq. mi.)']).round(1) #new field Change Name to Pop(mls².)
 #RDCD['Cases per AreaKM²'] = (RDCD['total_cases'] / RDCD['Area (sq. mi.)']).round(2) #Change Name
 
 #Change Govt'stringency_index' measure to a comparable index (0-5) called Stringency_Indexed
-RDCD['Stringency_Indexed']=(RDCD['stringency_index'] / 20).round()
+RD['Stringency_Indexed']=(RD['stringency_index'] / 20).round()
 #print(RDCD.columns) #work back to exclude unused columns here with new dataframe
 #print(RDCD.dtypes)
-print(RDCD)
+print(RD)
 # park/remove unneeded rows
 #del RDCD['Unnamed: 9']
 #del RDCD['Unnamed: 10']
@@ -117,7 +115,7 @@ econ_blocks = {
 Econ_BLocks = pd.DataFrame(econ_blocks)
 
 # Merge Econ_BLocks dataset to enhance RDCD dataset
-RDCD = (RDCD.merge(Econ_BLocks, left_on='location', right_on='Country', how='outer'))
+RDCD = (RD.merge(Econ_BLocks, left_on='location', right_on='Country', how='outer'))
 
 # check for missing data
 #print(RDCD)
@@ -137,7 +135,7 @@ RDCD=RDCD.query('day == "Wednesday"')
 RDCD['Weekly_Cases']=(RDCD.groupby('iso_code')['total_cases'].diff())
 RDCD['Weekly_Deaths']=(RDCD.groupby('iso_code')['total_deaths'].diff())
 
-RDCD=RDCD.query("DATE_RD >= '2020-01-07' and DATE_RD <='2020-09-30'")
+RDCD=RDCD.query("DATE >= '2020-01-07' and DATE <='2020-09-30'")
 print(RDCD)
 print(RDCD.isna().any())
 print(RDCD.isna().sum())
@@ -145,10 +143,10 @@ print(RDCD.dtypes)
 
 
 #output this to csv
-RDCD.to_csv('RDCDbase.csv')
+RDCD.to_csv('RDCDbasechecking.csv')
 
 # ***** New csv basefile
-RDCD1 = pd.read_csv('RDCDbase.csv')
+RDCD1 = pd.read_csv('RDCDbasechecking.csv')
 #opportunity here to read in certain columns
 #del RDCD1['Country_y']
 #del RDCD1['Unnamed: 0']
