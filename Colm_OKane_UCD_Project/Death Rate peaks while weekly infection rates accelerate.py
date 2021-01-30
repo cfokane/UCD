@@ -6,7 +6,7 @@ data = pd.read_csv('RDCDFinal.csv', index_col=0)
 
 data=(data.pivot_table(values=['Weekly_Cases','DeathsxCases'] , index=['Week_Num'], aggfunc='sum', fill_value=0))
 print(data)
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(12,5))
 plt.style.use('seaborn-whitegrid')
 ax.plot(data.index, data['Weekly_Cases'], color='b', label='Cases Recorded Globally per Week')
 ax.set_ylabel('Weekly Cases', color='b')

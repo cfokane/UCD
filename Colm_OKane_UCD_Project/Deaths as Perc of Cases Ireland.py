@@ -14,11 +14,16 @@ RDEcon = RDEcon.query('location == "Ireland"')
 RDEcon = pd.DataFrame(RDEcon)
 print(RDEcon)
 
-sns.set(style='whitegrid')
+
 # Chart showing Case numbers over time, against number of deaths
-g= sns.relplot(x='Week_Num', y='Weekly_Cases', data=RDEcon, size='Weekly_Cases', height=2.8, aspect=1.5, hue='Weekly_Deaths')
+g= sns.relplot(x='Week_Num', y='Weekly_Cases', data=RDEcon, height=2, aspect=1.5, s=200, size='Weekly_Cases', hue='Weekly_Deaths')
 g.fig.suptitle('Ireland; Cases & Deaths', x=0.5, y=1.0)
+g.set_ylabels('Weekly Cases Recorded')
+g.set_xlabels('Week Number')
 plt.subplots_adjust(top=0.85)
+sns.set_palette("RdBu")
+#sns.set(style='whitegrid')
+sns.set_context('paper')
 #leg=g._legend
 #leg.set_bbox_to_anchor([0.5, 0.5])
 
@@ -27,3 +32,4 @@ plt.subplots_adjust(top=0.85)
 #fig.savegig('Ireland; Cases & Deaths.png')
 plt.savefig('Ireland; Cases & Deaths.png')
 plt.show()
+plt.cla()

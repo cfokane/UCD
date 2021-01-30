@@ -6,27 +6,43 @@ import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
 
 data = pd.read_csv('RDCDFinal.csv', index_col=0)
-#create a pivot table
-RDCD4=(data.pivot_table(values='DeathsxCases', index='Month', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True).iloc[:-1,:])
-RDCD4a=RDCD4.fillna(0)
+print(data.columns)
+RD=(data.pivot_table(values=['Weekly_Deaths', 'Weekly_Cases'] , index='Month', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True).iloc[:-1,:])
 new_order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-RDCD4b=RDCD4a.reindex(new_order, axis=0)
+RD1=RD.reindex(new_order, axis=0)
+print(RD1)
+RD2 = pd.DataFrame(RD1)
+RD2['Deaths_x_Cases'] = RD2['Weekly_Deaths'] / RD2['Weekly_Cases']
+print(RD2)
+
+
+
+RD2 = RD1.loc[:, ['Econ_Block', 'Month', 'Deaths_x_Cases']]
+#print(RD2)
+
+#print(RD2)
+#create a pivot table
+#RDCD4=(RD.pivot_table(values=['Deaths_x_Cases'] , index='Month', columns='Econ_Block', aggfunc='sum',fill_value=0, margins=True).iloc[:-1,:])
+#RDCD4a=RDCD4.fillna(0)
+
+print(RDCD4b)
 #RDCD4b.to_csv('RDCD4b.csv')
+
 #print(RDCD4b)
 
 #data = pd.read_csv('RDCD4b.csv', index_col=0)
-print(RDCD4b)
-fig, ax = plt.subplots()
+#print(RDCD4b)
+fig, ax = plt.subplots(figsize=(12,5))
 
 #plt.figure(figsize=(6,4))
 #seventies = climate_change["1970-01-01":"1979-12-31"]
 #ax.plot(seventies.index, seventies["co2"])
 #plt.rcParams["figure.figsize"]=(200,60)
 
-ax.plot(RDCD4b.index, RDCD4b['BRICS'], label='BRICS')
-ax.plot(RDCD4b.index, RDCD4b['EU'], label='EU')
-ax.plot(RDCD4b.index, RDCD4b['US'], label='US')
-ax.plot(RDCD4b.index, RDCD4b['All_Others'], label='All Others')
+ax.plot(RD.index, RD['BRICS'], label='BRICS')
+ax.plot(RD.index, RD['EU'], label='EU')
+ax.plot(RD.index, RD['US'], label='US')
+ax.plot(RD.index, RD['All_Others'], label='All Others')
 #ax.plot(data.index, data['All'], label='All Countries')
 ax.set_xlabel('2020 by Month')
 ax.set_ylabel("Deaths as % of Monthly Cases by Block")

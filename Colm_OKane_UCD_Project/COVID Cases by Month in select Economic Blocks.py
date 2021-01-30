@@ -11,7 +11,7 @@ EconCases=Econ_cases.reindex(new_order, axis=0)
 
 
 print(EconCases)
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(12,5))
 #seventies = climate_change["1970-01-01":"1979-12-31"]
 #ax.plot(seventies.index, seventies["co2"])
 Q1_Q3 = EconCases["Jan":"Sep"]
@@ -29,9 +29,8 @@ ax.set_title("COVID Cases by Month in select Economic Blocks")
 ax.annotate('Wave1 Peak', xy=(3, 1000000),  xycoords='data',
                 xytext=(-15, 20), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->"), wrap=True)
-ax.annotate('following weeks of stability, weekly case rates accelerate again', xy=(6, 1500000),  xycoords='data',
-                xytext=(-50, 20), textcoords='offset points',
-                 wrap=True)
+ax.annotate('Following weeks of stability, weekly case rates accelerate again', xy=(4.2, 2000000),  xycoords='data',
+                xytext=(-50, 20), textcoords='offset points', wrap=True)
 ax.legend(loc=2)
 plt.show()
 fig.savefig('COVID Cases by Month in select Economic Blocks.png')

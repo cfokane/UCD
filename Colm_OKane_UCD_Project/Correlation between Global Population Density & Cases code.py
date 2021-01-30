@@ -19,8 +19,8 @@ data3 = pd.read_csv('CaseArea.csv')
 data3a=data3.sort_values('location')
 print(data3a)
 
-fig, ax =plt.subplots()
-plt.scatter(data3a['CasesxArea'], data2a['PopKM2'], s=data3a['CasesxArea'])
+fig, ax = plt.subplots(figsize=(12,6))
+plt.scatter(data3a['CasesxArea'], data2a['PopKM2'], s=data3a['CasesxArea']**1.5)
 
 
 plt.xlabel('Cases per Mi²')

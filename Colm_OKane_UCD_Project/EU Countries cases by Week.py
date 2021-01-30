@@ -16,7 +16,7 @@ print(RD)
 
 sns.set(style='whitegrid')
 # Chart showing Case numbers over time, against number of deaths
-g=sns.relplot(x='Week_Num', y='location', data=RDEcon, kind='scatter', height=5, aspect=1.75, size='Weekly_Cases', hue='DeathsxCases')
+g=sns.relplot(x='Week_Num', y='location', data=RDEcon, kind='scatter', height=6.5, aspect=1.75, size='Weekly_Cases', hue='DeathsxCases')
 #g= sns.relplot(x='Week_Num', y='Weekly_Cases', data=RDIre, size='Weekly_Deaths', height=5, aspect=1.75, hue='Weekly_Deaths', legend='full')
 g.fig.suptitle('EU Countries; Cases & Deaths', x=0.5, y=1.0)
 plt.subplots_adjust(top=0.85)
