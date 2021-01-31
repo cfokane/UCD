@@ -5,9 +5,10 @@ from matplotlib.pyplot import rcParams
 #Bubble Chart, cases per Area on YTD Wk39
 data = pd.read_csv('RDCDFinal.csv', index_col=0)
 data=data.query('Week_Num== 39')
-PopDen=(data.pivot_table(values=['PopKM2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+print(data.columns)
+PopDen=(data.pivot_table(values=['PopMi2'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 PopDen.to_csv('PopDen.csv')
-CaseArea=(data.pivot_table(values=['CasesxArea'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
+CaseArea=(data.pivot_table(values=['Cases_x_Area'], index='location', aggfunc='sum', fill_value=0, margins=True, margins_name='Grand_Total').iloc[:-1,:])
 CaseArea.to_csv('CaseArea.csv')
 print(CaseArea)
 
@@ -20,7 +21,8 @@ data3a=data3.sort_values('location')
 print(data3a)
 
 fig, ax = plt.subplots(figsize=(12,6))
-plt.scatter(data3a['CasesxArea'], data2a['PopKM2'], s=data3a['CasesxArea']**1.5)
+plt.scatter(data3a['Cases_x_Area'], data2a['PopMi2'], s=data3a['Cases_x_Area']**1.5)
+
 
 
 plt.xlabel('Cases per Mi²')
@@ -30,9 +32,9 @@ plt.xlim(0, 150) #to set the axis ...xlim for x axis
 #plt.xticks([1000, 10000, 100000],['1k', '10k', '100k'])
 plt.yscale('log')
 #plt.ylim(0, 25000) #to set the axis ...xlim for x axis
+plt.subplots_adjust(top=0.95, left=0.15)
 
-
-plt.yticks([50, 250, 500, 1000, 2500, 5000, 10000, 20000],['50/Mi²','250/Mi²', '500/Mi²', '1000/Mi²', '2500/Mi²', '5000/Mi²', '10000/Mi²', '20000/Mi²'])
+plt.yticks([50, 250, 500, 1000, 2500, 5000, 10000, 20000],['50/Mi²','250/Mi²', '500/Mi²', '1000/Mi²', '2500/Mi²', '5000/Mi²', '10000/Mi²', '20000 People/Mi²'])
 
 plt.grid(True)
 # Additional customizations

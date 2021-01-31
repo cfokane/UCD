@@ -60,7 +60,7 @@ print(RD.isna().any())
 #RD['European Single Market']= RD['European Single Market'].fillna('Member')
 RD.fillna(0)
 print(RD.isna().sum())
-RD.to_csv('RD2222.csv')
+RD.to_csv('RD.csv')
 
 
 print(RD)
@@ -79,11 +79,11 @@ RD['Wednesdays'] = RD['day'] == 'Wednesday' #boolean set to confirm Wednesday as
 
 
 # add columns with comparable measures
-RD['CasesxArea'] = (RD['total_cases'] / RD['Area (sq. mi.)']).round(1) #change name to mls2
-RD['CasesxPop'] = (RD['total_cases'] / RD['population']).round(1)
-RD['DeathsxCases'] = (RD['total_deaths'] / RD['total_cases']).round(1)
+RD['Cases_x_Area'] = (RD['total_cases'] / RD['Area (sq. mi.)']).round(1) #change name to mls2
+RD['Cases_x_Pop'] = (RD['total_cases'] / RD['population']).round(1)
+RD['Cumulative Deaths_%_Cases']= (RD['total_deaths'] / RD['total_cases']).round(1)
 #RDCD['AreaKM2'] =RDCD['Area (km²)'] #new field Change Name to Area(mls².)
-RD['PopKM2'] =(RD['population'] / RD['Area (sq. mi.)']).round(1) #new field Change Name to Pop(mls².)
+RD['PopMi2'] =(RD['population'] / RD['Area (sq. mi.)']).round(1) #new field Change Name to Pop(mls².)
 #RDCD['Cases per AreaKM²'] = (RDCD['total_cases'] / RDCD['Area (sq. mi.)']).round(2) #Change Name
 
 #Change Govt'stringency_index' measure to a comparable index (0-5) called Stringency_Indexed
@@ -135,6 +135,11 @@ RDCD=RDCD.query('day == "Wednesday"')
 RDCD['Weekly_Cases']=(RDCD.groupby('iso_code')['total_cases'].diff())
 RDCD['Weekly_Deaths']=(RDCD.groupby('iso_code')['total_deaths'].diff())
 
+RDCD['Weekly_Deaths'].fillna(0) #not doing anything
+
+#Need to fix these in each graph using them
+#RDCD['DeathsxCases'] = (RDCD['Weekly_Deaths'] / RDCD['Weekly_Cases']).round(1)
+#RDCD['Deaths_%_Cases'] = (RDCD['Weekly_Deaths']*100 / RDCD['Weekly_Cases']).round(1)
 RDCD=RDCD.query("DATE >= '2020-01-07' and DATE <='2020-09-30'")
 print(RDCD)
 print(RDCD.isna().any())
