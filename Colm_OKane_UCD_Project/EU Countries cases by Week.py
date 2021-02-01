@@ -35,6 +35,6 @@ plt.subplots_adjust(top=0.98)
 #leg._loc=2
 #fig=ax.get_figure()
 #fig.savegig('Ireland; Cases & Deaths.png')
-plt.savefig('EU; Cases & Deaths.png')
+plt.savefig('EU Members; Cases & Deaths by Week.png')
 plt.show()
 plt.clf()

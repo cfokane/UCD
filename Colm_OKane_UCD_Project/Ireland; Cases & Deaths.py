@@ -6,8 +6,7 @@ from matplotlib import rcParams
 data = pd.read_csv('RDCDFinal.csv', index_col=0)
 print(data.columns)
 RD = data.loc[:, ['location', 'Econ_Block', 'Week_Num', 'Weekly_Cases',
-                  'Stringency_Indexed', 'population', 'Weekly_Deaths',
-                  'Deaths_%_Cases']]
+                  'Stringency_Indexed', 'population', 'Weekly_Deaths']]
 RDEcon = RD.query('Econ_Block== "EU"')
 RDEcon1 = RDEcon.query('location == "Ireland"')
 RDEcon1 = pd.DataFrame(RDEcon1)
@@ -22,15 +21,11 @@ g.set_xlabels('Week Number')
 plt.subplots_adjust(top=0.95, bottom=0.13)
 #plt.figlegend()
 sns.set_palette("RdBu")
-#sns.set(style='whitegrid')
+sns.set(style='whitegrid')
 sns.set_context('paper')
 plt.setp(g._legend.get_texts(), fontsize=8)
-#leg=g._legend
-#leg.set_bbox_to_anchor([0.5, 0.5])
 plt.grid(True)
-#leg._loc=2
-#fig=ax.get_figure()
-#fig.savegig('Ireland; Cases & Deaths.png')
+
 plt.savefig('Ireland; Cases & Deaths.png')
 plt.show()
 plt.cla()

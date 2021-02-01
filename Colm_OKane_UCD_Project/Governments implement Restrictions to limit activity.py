@@ -31,6 +31,7 @@ ax.annotate('Wk15 = 150 Countries', xy=(15, 148),  xycoords='data',
                 xytext=(10, -20), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->")
                 )
+
 ax.legend(loc=5)
 plt.show()
 fig.savefig('Governments implement Restrictions to limit interaction.png')
