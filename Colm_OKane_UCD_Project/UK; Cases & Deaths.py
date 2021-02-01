@@ -6,8 +6,7 @@ from matplotlib import rcParams
 data = pd.read_csv('RDCDFinal.csv', index_col=0)
 print(data.columns)
 RD = data.loc[:, ['location', 'Econ_Block', 'Week_Num', 'Weekly_Cases',
-                  'Stringency_Indexed', 'population', 'Weekly_Deaths',
-                  'Deaths_%_Cases']]
+                  'Stringency_Indexed', 'population', 'Weekly_Deaths',]]
 RDEcon = RD.query('Econ_Block== "EU"')
 
 # Chart showing Case numbers over time, against number of deaths in teh UK
@@ -18,7 +17,7 @@ sns.axes_style('darkgrid')
 g.fig.suptitle('UK; COVID Cases & Deaths by Week', x=0.5, y=1.0)
 g.set_ylabels('Weekly Cases Recorded')
 g.set_xlabels('Week Number')
-plt.subplots_adjust(top=0.95, bottom=0.13)
+plt.subplots_adjust(top=0.98, bottom=0.13)
 #plt.figlegend()
 sns.set_palette('RdBu')
 plt.grid(True)
