@@ -27,17 +27,12 @@ plt.scatter(data3a['Cases_x_Area'], data2a['PopMi2'], s=data3a['Cases_x_Area']**
 
 plt.xlabel('Cases per Mi²')
 plt.ylabel('Population Density (per Mi²)')
-plt.title('Correlation between Population Density & Cases Globally')
-plt.xlim(0, 150) #to set the axis ...xlim for x axis
-#plt.xticks([1000, 10000, 100000],['1k', '10k', '100k'])
+plt.title('5 Most Densely Populated countries have the highest Infecton Rate per Square Mile', wrap=True)
+plt.xlim(0, 150)
 plt.yscale('log')
-#plt.ylim(0, 25000) #to set the axis ...xlim for x axis
 plt.subplots_adjust(top=0.95, left=0.15)
-
 plt.yticks([50, 250, 500, 1000, 2500, 5000, 10000, 20000],['50/Mi²','250/Mi²', '500/Mi²', '1000/Mi²', '2500/Mi²', '5000/Mi²', '10000/Mi²', '20000 People/Mi²'])
-
 plt.grid(True)
-# Additional customizations
 ax.annotate('Monaco recorded 107 cases per Mi²', xy=(107, 20000),  xycoords='data',
                 xytext=(-10, -30), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->"), wrap=True, color='red')
@@ -47,9 +42,14 @@ ax.annotate('Bahrain 106 cse/Mi²', xy=(106, 2600),  xycoords='data',
 ax.annotate('Singapore 83 cse/Mi²', xy=(83, 8400),  xycoords='data',
                 xytext=(-15, -50), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->"), wrap=True )
+ax.annotate('Vatican 60 cse/Mi²', xy=(60, 4045),  xycoords='data',
+                xytext=(-15, -50), textcoords='offset points',
+                arrowprops=dict(arrowstyle="->"), wrap=True )
+ax.annotate('Gibralter 56 cse/Mi²', xy=(56, 4813),  xycoords='data',
+                xytext=(-15, -50), textcoords='offset points',
+                arrowprops=dict(arrowstyle="->"), wrap=True )
 
 plt.text(3, 80, '} Lower Cases per Mi² where Population Density is lower')
-
 plt.show()
 fig.savefig('Correlation between Population Density & Cases Globally.png')
 plt.close()

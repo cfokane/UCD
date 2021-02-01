@@ -127,7 +127,6 @@ RDCD.fillna(0)
 RDCD['Econ_Block'] = RDCD['Econ_Block'].fillna('All_Others')
 
 
-
 # Create a Weekly Dataset to using Wednesday as the filter to give a weekly reporting day
 RDCD=RDCD.query('day == "Wednesday"')
 
@@ -135,33 +134,38 @@ RDCD=RDCD.query('day == "Wednesday"')
 RDCD['Weekly_Cases']=(RDCD.groupby('iso_code')['total_cases'].diff())
 RDCD['Weekly_Deaths']=(RDCD.groupby('iso_code')['total_deaths'].diff())
 
-RDCD['Weekly_Deaths'].fillna(0) #not doing anything
+RDCD['Weekly_Deaths'].fillna(0)
 
-#Need to fix these in each graph using them
-#RDCD['DeathsxCases'] = (RDCD['Weekly_Deaths'] / RDCD['Weekly_Cases']).round(1)
-#RDCD['Deaths_%_Cases'] = (RDCD['Weekly_Deaths']*100 / RDCD['Weekly_Cases']).round(1)
+#filter the data set for relevant dates
 RDCD=RDCD.query("DATE >= '2020-01-07' and DATE <='2020-09-30'")
-print(RDCD)
-print(RDCD.isna().any())
-print(RDCD.isna().sum())
-print(RDCD.dtypes)
-
 
 #output this to csv
 RDCD.to_csv('RDCDbasechecking.csv')
 
 # ***** New csv basefile
 RDCD1 = pd.read_csv('RDCDbasechecking.csv')
-#opportunity here to read in certain columns
-#del RDCD1['Country_y']
-#del RDCD1['Unnamed: 0']
-
+RDCD1=RDCD1.query("location != 'Hong Kong'")
+print(RDCD1.columns)
+#(RDCD1.isna().any())
+#print(RDCD1.isna().sum())
 #print(RDCD1.dtypes)
 
-#group=(RDCD1.groupby('iso_code')['Week_Num'].count())
-#print(group)
-#select final date range to analyse NOT NEEDED NOW
-#RDCD1=RDCD1.query("DATE_RD >= '2020-01-07' and DATE_RD <='2020-09-30'")
+#opportunity here to read in certain columns
+del RDCD1['dayz']
+del RDCD1['Country_y']
+del RDCD1['human_development_index']
+del RDCD1['Country_x']
+del RDCD1['Area (km²)']
+del RDCD1['gdp_per_capita']
+del RDCD1['Unnamed: 0']
+del RDCD1['Wednesdays']
+del RDCD1['Country']
 
+
+print(RDCD1.columns)
+#(RDCD1.isna().any())
+print(RDCD1.isna().sum())
+#print(RDCD1.dtypes)
 #output this to csv
-RDCD1.to_csv('RDCDFinal.csv') #being used by subsetting .loc to create Key_columns_Only.csv
+
+RDCD1.to_csv('RDCDFinal.csv')
