@@ -30,7 +30,8 @@ ax.annotate('Global infections accelerate again as the                      Mort
                 xytext=(90, -10), textcoords='offset points',
                 arrowprops=dict(arrowstyle="->"), wrap=True)
 plt.grid(True)
-plt.legend()
+ax.legend()
+ax2.legend(loc=2)
 plt.show()
 fig.savefig('Mortality Rate peaks while weekly infection rates accelerate.png')
 plt.close()
