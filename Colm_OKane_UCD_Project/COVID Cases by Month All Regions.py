@@ -12,13 +12,10 @@ EconCases=Econ_cases.reindex(new_order, axis=0)
 
 print(EconCases)
 fig, ax = plt.subplots(figsize=(12,5))
-#seventies = climate_change["1970-01-01":"1979-12-31"]
-#ax.plot(seventies.index, seventies["co2"])
+
 Q1_Q3 = EconCases["Jan":"Sep"]
 ax.plot(Q1_Q3.index, Q1_Q3['All'], label='All Regions')
 
-#plt.xlim(1, 39) #to set the axis ...xlim for x axis
-#plt.xticks([1000, 10000, 100000],['1k', '10k', '100k'])
 plt.ylim(0, 1000000) #to set the axis ...xlim for x axis
 plt.yticks([1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000, 10000000],['1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m', '10m'])
 ax.set_xlabel('Q1-Q3 2020 (Months)')
